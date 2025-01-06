@@ -8,9 +8,4 @@ export const menu = [
     {name: 'Contact', route: routes.contact},
     {name: 'Properties', route: routes.properties},
     {name: 'Register', route: routes.register},
-    {name: 'Profile', route: routes.profile},
-    {name: 'Logout', route: routes.logout},
-    {name: 'Add Property', route: routes.addProperty},
-    {name: 'Edit Property', route: routes.editProperty},
-    {name: 'Property', route: routes.property},
 ]
