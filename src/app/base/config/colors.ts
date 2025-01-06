@@ -1,0 +1,16 @@
+export const colors = {
+    white: '#ffffff',
+    black: '#000000',
+    primary: '#93B10B',
+    secondary: '#DEEBEF',
+    tertiary: '#818181',
+    error: '#DC2626',
+    success: '#10B981',
+    button: '#2A8CBF',
+    bgDark: '#14161F',
+    boxColorDark: '#1A1B26',
+    boxOutline: '#283135',
+    boxShadow: '#2B2D3F',
+    newLinear: '#5A5F89',
+    lightBg: '#F0F0F0',
+};
