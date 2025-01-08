@@ -3,6 +3,7 @@ import { menu } from "@/app/base/utils/data";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Typography } from "../../../common";
+import { Button } from "@/app/components/common/Button";
 
 export const NavMenu = (): React.ReactElement => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,12 +44,12 @@ export const NavMenu = (): React.ReactElement => {
             <ul
                 className={`${
                     isMenuOpen ? "flex" : "hidden"
-                } fixed inset-0 bg-black bg-opacity-90 flex-col justify-center items-center gap-6 z-50 p-4 lg:flex lg:relative lg:bg-transparent lg:inset-auto lg:flex-row`}
+                } fixed inset-0 bg-white bg-opacity-90 flex-col justify-center items-center gap-6 z-50 p-4 lg:flex lg:relative lg:bg-transparent lg:inset-auto lg:flex-row`}
             >
                 {/* Close Button */}
                 <button
                     onClick={() => setIsMenuOpen(false)}
-                    className="absolute top-6 right-6 text-black focus:outline-none lg:hidden"
+                    className="absolute top-6 right-6 text-primary focus:outline-none lg:hidden"
                 >
                     <svg
                         className="w-8 h-8"
@@ -66,13 +67,14 @@ export const NavMenu = (): React.ReactElement => {
                     </svg>
                 </button>
 
+                {/* Navigation Items */}
                 {menu.map((item, index) => (
-                    <li key={index} className="text-black">
+                    <li key={index} className="text-black text-center mx-auto">
                         <Link href={item.route}>
-                            <span onClick={() => setIsMenuOpen(false)}> {/* Close menu on link click */}
+                            <span onClick={() => setIsMenuOpen(false)}>
                                 <Typography
-                                    variant="bodyRegular"
-                                    className="hover:underline text-black"
+                                    variant="h5Light"
+                                    className="hover:underline text-primary lg:text-black"
                                 >
                                     {item.name}
                                 </Typography>
@@ -80,7 +82,16 @@ export const NavMenu = (): React.ReactElement => {
                         </Link>
                     </li>
                 ))}
+
+                {/* Buttons for Small Screens */}
+                <div className="flex flex-col items-center gap-4 lg:hidden">
+                    <Button href="">Sign In</Button>
+                    <Button className="border-gray-400 text-gray-400" href="">
+                        Add Property
+                    </Button>
+                </div>
             </ul>
         </nav>
     );
 };
+
