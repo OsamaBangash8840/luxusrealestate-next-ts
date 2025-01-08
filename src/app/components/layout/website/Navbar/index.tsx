@@ -8,7 +8,7 @@ import { Button } from "@/app/components/common/Button";
 
 export const Navbar = (): React.ReactElement => {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-[20%_50%_25%] items-center lg:mb-[-40px]">
+        <div className="grid grid-cols-2 md:grid-cols-[20%_50%_25%] items-center lg:mt-[-50px] lg:mb-[-40px]">
             <div className="flex justify-center">
                 <Link href={routes.home}>
                     <MImage

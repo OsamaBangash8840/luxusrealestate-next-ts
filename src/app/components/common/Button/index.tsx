@@ -2,12 +2,15 @@ import React from "react";
 import Link from "next/link";
 
 interface ButtonProps {
+  onClick?: () => void;
   children: React.ReactNode;
   className?: string;
   href?: string; // Optional href for linking
 }
 
 export const Button: React.FC<ButtonProps> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onClick,
   children,
   className = '',
   href,

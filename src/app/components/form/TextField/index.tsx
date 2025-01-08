@@ -3,7 +3,7 @@ import { Typography } from '../../common';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
-    type?: 'text' | 'number'; // Restrict type to valid input types
+    type?: 'text' | 'number' | 'email'; // Restrict type to valid input types
     placeholder: string;
     className?: string;
     icon?: React.ReactNode;
