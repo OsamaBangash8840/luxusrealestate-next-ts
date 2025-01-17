@@ -1,11 +1,16 @@
-'use client'
+'use client';
 
 import React, { useState } from "react";
 import { routes, USER_DATA } from '@/app/base/utils/constants';
 import { useLoginMutation } from '../../../lib/features/auth/authApiSlice';
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
-import Link from "next/link";
+import { Button } from "../../common/Button";
+import { Modal } from "../../common/Modal";
+import GoogleAuth from "@/app/(pages)/capsules/page";
+import { TextField } from "../../form";
+import { Typography } from "../../common";
+import { toast } from "react-toastify";
 
 interface IPayLoad {
   email: string;
@@ -13,41 +18,40 @@ interface IPayLoad {
 }
 
 export const LoginMain = (): React.ReactElement => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const [payload, setPayload] = useState<IPayLoad>({
     email: '',
     password: ''
   });
-
-  const [errors, setErrors] = useState<{ email?: string, password?: string }>({});
+  const [isOpen,setIsOpen]= useState<boolean>(false)
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const router = useRouter();
   const [login] = useLoginMutation();
 
-  // OnChange event handler
+  // Handle Input Changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const name = e.target.name;
-    const value = e.target.value;
+    const { name, value } = e.target;
 
     setPayload({
       ...payload,
       [name]: value,
     });
 
-    // Clear the error for the field that is being modified
     setErrors({
       ...errors,
-      [name]: ''
+      [name]: '',
     });
   };
 
-  // Form validation
+  // Validate Form
   const validateForm = (): boolean => {
-    const newErrors: { email?: string, password?: string } = {};
+    const newErrors: { email?: string; password?: string } = {};
 
     if (!payload.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(payload.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'Invalid email format';
     }
 
     if (!payload.password) {
@@ -55,96 +59,73 @@ export const LoginMain = (): React.ReactElement => {
     }
 
     setErrors(newErrors);
-
-    // If there are any errors, return false
     return Object.keys(newErrors).length === 0;
   };
 
-  // Form submission handler
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-): Promise<void> => {
+  // Handle Form Submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    if (!validateForm()) {
-        return;
-    }
 
-    setIsLoading(true); // Start loading
+    if (!validateForm()) return;
+
+    setIsLoading(true);
 
     try {
-        const data = await login(payload).unwrap();
-        setCookie(USER_DATA, data); // Set cookie with user data
-        router.push(routes.home); // Redirect after successful login
+      const data = await login(payload).unwrap();
+      setCookie(USER_DATA, JSON.stringify(data), { maxAge: 60 * 60 * 24 }); // Store user data in cookie for 24 hours
+      console.log(setCookie)
+      router.push(routes.home); // Redirect to the home page
+      toast.success(`Successfully Logged In`)
     } catch (error) {
-        console.error("Login failed:", error);
-        setErrors({ email: "Invalid email or password", password: "Invalid email or password" });
+      setErrors({ email: 'Invalid credentials', password: 'Invalid credentials' });
+      console.error('Login failed:', error);
     } finally {
-        setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
-};
-
+  };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen bg-cover bg-center mb-10 mt-28 ml-2 xl:mx-8 rounded bg-transparent"
-      style={{
-        backgroundImage: "url('https://i.redd.it/islamia-college-peshawar-pakistan-v0-zyy8lfo8zcx91.jpg?width=1080&format=pjpg&auto=webp&s=e20bb64198f994ee95777c183716ecca191af150')",
-        opacity: '90%',
-      }}
-    >
-      <div className="flex flex-col max-w-md p-6 mt-4 mb-32 ml-[1px] rounded-md sm:p-10 opacity-100 bg-black dark:bg-gray-50 text-black">
-        <div className="mb-8 text-center">
-          <h1 className="my-3 text-4xl font-bold text-white">Login</h1>
-          <p className="text-sm text-white">Sign in to access your account</p>
-        </div>
-        <form noValidate className="space-y-12" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block mb-2 lg:mr-[280px] text-white text-sm">Email address</label>
-              <input
-                type="email"
+    <>
+    <Button onClick={()=> setIsOpen(true)}>Sign In</Button>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+        <div className="flex  w-full overflow-hidden rounded-lg">
+          {/* Left Section */}
+          <div className="w-1/2 bg-gradient-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
+            <Typography variant='h3' className="text-white mb-2">Luxus Real Estate</Typography>
+            <Typography variant='extraSmallRegular' className="text-white">Step into Luxury Living – Sign In with Luxus Real Estate Today!.</Typography>
+          </div>
+
+          {/* Right Section */}
+          <div className="w-[70%] bg-white p-8">
+            <Typography variant='h1' className=" text-blue-700 mb-6">Sign up</Typography>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <TextField
                 name="email"
-                id="email"
-                placeholder="leroy@jenkins.com"
-                className="w-full px-3 py-2 border rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800"
+                placeholder="Enter your email"
                 value={payload.email}
                 onChange={handleChange}
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <label htmlFor="password" className="text-sm text-white">Password</label>
-              </div>
-              <input
-                type="password"
+              {errors.email && <p className="error">{errors.email}</p>}
+
+              <TextField
                 name="password"
-                id="password"
-                placeholder="***"
-                className="w-full px-3 py-2 border rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800"
+                placeholder="Enter your password"
+                type="password"
                 value={payload.password}
                 onChange={handleChange}
               />
-              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-              <Link href="/forgot-password" className="text-xs lg:mr-64 text-white hover:underline">Forgot password?</Link>
-            </div>
+              {errors.password && <p className="error">{errors.password}</p>}
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:opacity-90 text-white font-bold py-2 rounded-lg"
+              >
+                Login 
+              </Button>
+              <GoogleAuth/>
+            </form>
           </div>
-          <div className="space-y-2">
-            <div>
-            <button
-              type="submit"
-              className="w-full px-8 py-3 font-semibold mb-2 rounded-md bg-white text-black hover:bg-yellow-500 hover:text-black hover:scale-110"
-              disabled={isLoading}
-            >
-              {isLoading ? "Logging in..." : "Log in"}
-           </button>
-            </div>
-            <p className="px-6 text-sm text-center text-white"> Don&#39;t have an account yet?
-              <Link href="/signup" className="hover:underline text-white">Sign up</Link> .
-            </p>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
-}
+        </div>
+      </Modal>
+              </>
+  );
+};

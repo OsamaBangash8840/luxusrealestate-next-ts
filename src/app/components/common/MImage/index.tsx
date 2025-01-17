@@ -7,6 +7,7 @@ interface IImage {
     h: number;
     alt: string;
     className?: string;
+    style?: React.CSSProperties
 }
 
 export const MImage = ({
@@ -15,6 +16,7 @@ export const MImage = ({
     h,
     alt,
     className,
+    style,
     ...rest
 }: IImage): React.ReactElement => (
     <Image
@@ -23,6 +25,7 @@ export const MImage = ({
         height={h}
         alt={alt}
         className={`${className}`}
+        style={style}
         {...rest}
     />
 );

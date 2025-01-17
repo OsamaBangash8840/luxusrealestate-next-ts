@@ -7,7 +7,7 @@ export const registerApiSlice = createApi({
     reducerPath : 'regisApi',
     tagTypes : [],
     endpoints : build => ({
-        register : build.mutation<IRegisterRequestBody,IRegisterUserResponse>({
+        register : build.mutation<IRegisterUserResponse,IRegisterRequestBody>({
             query:body => ({
                 url : 'api/register',
                 method : 'post',

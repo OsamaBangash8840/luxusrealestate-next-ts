@@ -3,15 +3,15 @@ import axiosBaseQuery from '../axiosBaseQuery'; // Import the updated axiosBaseQ
 import type { IUserRequestBody, IUserLoginResponse } from './types';
 
 export const authApiSlice = createApi({
-  baseQuery: axiosBaseQuery(), // Use the updated base query with token
+  baseQuery: axiosBaseQuery(), // Use the updated base query
   reducerPath: 'authApi',
   tagTypes: [],
-  endpoints: build => ({
+  endpoints: (build) => ({
     login: build.mutation<IUserLoginResponse, IUserRequestBody>({
-      query: body => ({
+      query: (credentials) => ({
         url: `api/login`,
         method: 'post',
-        data: body,
+        data: credentials,
       }),
     }),
     // Add other endpoints as needed

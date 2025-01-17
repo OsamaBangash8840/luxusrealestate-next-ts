@@ -1,65 +1,34 @@
-'use client'
-import { useState, useEffect } from "react"
-// import { Loading } from "../components"
+'use client';
+import React from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useRouter } from "next/navigation";
 
-export default function Capsules() {
-  const [capsules, setCapsules] = useState([])
+const GoogleAuth = () => {
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchCapsules = async () => {
-      const res = await fetch("https://api.spacexdata.com/v4/capsules")
-      const data = await res.json()
-      setCapsules(data)
-    }
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8000/api/auth/google";
+  };
 
-    fetchCapsules()
-  }, [])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSuccessRedirect = () => {
+    console.log(handleSuccessRedirect)
+    router.push("/properties"); // Redirect to the profile page or home page after successful login
+  };
 
   return (
-    <>
-      {  (
-        <section className="py-32">
-          <h1 className="heading text-center mb-10">Capsules</h1>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1092778869689-egbbkv6e16ovjmsf3lf3ls88tk888jgo.apps.googleusercontent.com"}>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold mb-4">Login with Google</h1>
+        <button
+          className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600"
+          onClick={handleGoogleLogin}
+        >
+          Login with Google
+        </button>
+      </div>
+    </GoogleOAuthProvider>
+  );
+};
 
-          <div className="max-width grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 px-5">
-            {capsules.map(
-              ({
-                id,
-                type,
-                status,
-                serial,
-                launches,
-                last_update,
-                land_landings,
-                water_landings,
-                reuse_count,
-              }) => (
-                <article key={id} className="articles">
-                  <h2 className="text-xl font-bold mb-5">
-                    {type},{" "}
-                    <span className="text-base opacity-75 font-light">
-                      {serial}
-                    </span>
-                  </h2>
-                  <ul>
-                    <li className="mb-1">{launches} launches</li>
-                    <li className="mb-1">{land_landings} land landings</li>
-                    <li className="mb-1">{water_landings} water landings</li>
-                    <li className="mb-1">Reused {reuse_count} times</li>
-                    {status === "active" ? (
-                      <li className="text-emerald-500">Active</li>
-                    ) : (
-                      <li className="text-rose-500">Retired</li>
-                    )}
-                  </ul>
-
-                  <p className="mt-5 opacity-75">{last_update}</p>
-                </article>
-              )
-            )}
-          </div>
-        </section>
-      )}
-    </>
-  )
-}
+export default GoogleAuth;

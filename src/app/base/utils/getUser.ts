@@ -1,17 +1,16 @@
 import { getCookie } from 'cookies-next';
 import { USER_DATA } from './constants';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getUser = (): any => {
-    const userData = getCookie(USER_DATA);
+export const getUser = () => {
+  const userData = getCookie(USER_DATA);
 
-    if (userData && typeof userData === 'string') {
-        try {
-            return JSON.parse(userData);
-        } catch (error) {
-            console.error('Error parsing user data from cookie:', error);
-            return null;
-        }
+  if (userData && typeof userData === 'string') {
+    try {
+      return JSON.parse(userData); // Parse JSON if valid
+    } catch (error) {
+      console.warn('Error parsing user data from cookie:', error);
+      return null; // Return null if the data isn't valid JSON
     }
-    return null;
+  }
+  return null; // Return null if no cookie is found
 };

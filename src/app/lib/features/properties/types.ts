@@ -8,6 +8,7 @@ export interface IProperty {
     buildYear: number; // Year the property was built
     size: number; // Size of the property in square feet/meters, stored as a number
     amenities: string[]; // List of amenities (e.g., ["pool", "garage"])
+    lotSize: number;
     images: string[]; // Array of image URLs
     reviews: IReview[]; // Array of reviews related to the property
     mapLocation: { // Coordinates for the property

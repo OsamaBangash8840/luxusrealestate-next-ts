@@ -6,6 +6,7 @@ interface ButtonProps {
   children: React.ReactNode;
   className?: string;
   href?: string; // Optional href for linking
+  type ?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -21,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   // Render as Link if href exists
   if (href) {
     return (
-      <Link href={href} className={`${baseClasses} ${className}`}>
+      <Link href={href} onClick={onClick} className={`${baseClasses} ${className}`}>
         {children}
       </Link>
     );
@@ -29,7 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   // Render as button if href is not provided
   return (
-    <button className={`${baseClasses} ${className}`}>
+    <button onClick={onClick} className={`${baseClasses} ${className}`}>
       {children}
     </button>
   );

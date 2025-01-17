@@ -3,7 +3,7 @@ import { Typography } from '../../common';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
-    type?: 'text' | 'number' | 'email'; // Restrict type to valid input types
+    type?: 'text' | 'number' | 'email' | 'password'; // Restrict type to valid input types
     placeholder: string;
     className?: string;
     icon?: React.ReactNode;
@@ -32,7 +32,7 @@ export const TextField = ({
             <input
                 type={type} // Accepts only 'text' or 'number'
                 placeholder={placeholder}
-                className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] xl:h-[56px] rounded-full outline-none border border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base ${
+                className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] xl:h-[56px] rounded-xl outline-none border border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base ${
                     icon !== null ? 'pr-6 pl-[54px]' : 'px-6'
                 }`}
                 {...rest}

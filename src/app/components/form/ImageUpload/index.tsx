@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
 import { IoCloudUploadOutline } from 'react-icons/io5';
 import { useUploadImagesMutation } from '../../../lib/features/uploadImages/uploadImgSpliceApi';
@@ -9,6 +9,8 @@ interface UploadImageFieldProps {
   className?: string;
   accept?: string;
   multiple?: boolean;
+  value?: string[];
+  onChange ?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const UploadImageField: React.FC<UploadImageFieldProps> = ({
@@ -19,7 +21,7 @@ export const UploadImageField: React.FC<UploadImageFieldProps> = ({
 }): React.ReactElement => {
   const [uploadImages, { isLoading }] = useUploadImagesMutation();
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
-  console.log(uploadedUrls);
+  console.log(uploadedUrls)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -27,26 +29,24 @@ export const UploadImageField: React.FC<UploadImageFieldProps> = ({
       toast.error('No files selected');
       return;
     }
-  
+
     const formData = new FormData();
     Array.from(files).forEach((file) => formData.append('files', file));
-  
-    // Debug: Log FormData contents
+
+    console.log('FormData contents:');
     for (const [key, value] of formData.entries()) {
-      console.log(key, value); // Should print 'files' and file details
+      console.log(key, value);
     }
-  
+
     try {
       const response = await uploadImages(formData).unwrap();
       setUploadedUrls(response.map((file: { imageUrl: string }) => file.imageUrl));
       toast.success('Images uploaded successfully!');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Upload failed:', err);
-      toast.error('Image upload failed');
+      toast.error(err?.data?.error || 'Image upload failed');
     }
   };
-  
-  
 
   return (
     <label

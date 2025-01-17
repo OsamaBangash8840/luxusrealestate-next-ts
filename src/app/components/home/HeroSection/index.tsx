@@ -13,7 +13,7 @@ export const HeroSection = () => {
 
             {/* Content */}
             <div className="relative z-10 text-center mt-40 text-white px-4">
-                <Typography className="text-5xl md:text-6xl font-bold leading-tight">
+                <Typography className="text-5xl md:text-6xl text-white font-bold leading-tight">
                     Agents. Tours. Loans. Homes.
                 </Typography>
 

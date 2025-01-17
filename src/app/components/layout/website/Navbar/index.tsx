@@ -5,6 +5,7 @@ import React from "react";
 import { Images } from "../../../../../../public/images";
 import { NavMenu } from "../NavbarMenu";
 import { Button } from "@/app/components/common/Button";
+import AdminLoginPage from "@/app/(pages)/login/page";
 
 export const Navbar = (): React.ReactElement => {
     return (
@@ -25,8 +26,8 @@ export const Navbar = (): React.ReactElement => {
             </div>
             {/* Buttons only visible on large screens */}
             <div className="hidden lg:flex gap-4">
-                <Button href="">Sign In</Button>
-                <Button className="border-gray-400 text-gray-400" href="">
+                <AdminLoginPage/>
+                <Button className="bg-primary text-white" href="">
                     Add Property
                 </Button>
             </div>

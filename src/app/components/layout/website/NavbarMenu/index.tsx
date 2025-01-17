@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Typography } from "../../../common";
 import { Button } from "@/app/components/common/Button";
+import AdminLoginPage from "@/app/(pages)/login/page";
 
 export const NavMenu = (): React.ReactElement => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +86,7 @@ export const NavMenu = (): React.ReactElement => {
 
                 {/* Buttons for Small Screens */}
                 <div className="flex flex-col items-center gap-4 lg:hidden">
-                    <Button href="">Sign In</Button>
+                    <AdminLoginPage/>
                     <Button className="border-gray-400 text-gray-400" href="">
                         Add Property
                     </Button>
