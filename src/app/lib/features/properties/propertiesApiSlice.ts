@@ -5,7 +5,7 @@ import { IPropertiesPayload, IProperty } from "./types";
 export const propertiesApiSlice = createApi({
   baseQuery: axiosBaseQuery(),
   reducerPath: 'propertiesApi',
-  tagTypes: [], // You can remove this if you don't plan to use caching
+  tagTypes: [], // You can define tags for caching if needed
   endpoints: (build) => ({
     getProperty: build.query<IProperty[], void>({
       query: () => ({
@@ -13,14 +13,17 @@ export const propertiesApiSlice = createApi({
         method: 'GET',
       }),
     }),
-    addProperty: build.mutation<IProperty,IPropertiesPayload>({
-      query: payload => ({
+    addProperty: build.mutation<IProperty, IPropertiesPayload>({
+      query: (payload) => ({
         url: 'api/properties',
         method: 'POST',
-        payload,
-      })
-    })
+        body: payload, // Correctly specify the body
+        headers: {
+          'Content-Type': 'application/json', // Explicitly set the content type
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetPropertyQuery,useAddPropertyMutation } = propertiesApiSlice;
+export const { useGetPropertyQuery, useAddPropertyMutation } = propertiesApiSlice;

@@ -32,7 +32,7 @@ export const TextAreaField = ({
              <textarea
                 rows={rows}
                 placeholder={placeholder}
-                className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary py-3 sm:py-4 rounded-2xl outline-none border border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base resize-none ${icon !== null ? 'pr-6 pl-[54px]' : 'px-6'}`}
+                className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary py-3 sm:py-4 rounded-2xl shadow-lg outline-none border border-dashed border-newLinear  shadow-newLinear border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base resize-none ${icon !== null ? 'pr-6 pl-[54px]' : 'px-6'}`}
                 {...rest}
             />
         </div> 

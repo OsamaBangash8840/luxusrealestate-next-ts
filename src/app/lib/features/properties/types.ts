@@ -35,20 +35,16 @@ export interface IProperty {
   
   // Payload for creating or updating a property (e.g., from a form)
   export interface IPropertiesPayload {
-    title: string; // Title of the property
-    description: string; // Description of the property
-    price: number; // Price of the property
-    location: string; // Location of the property
-    type: string; // Type of property (e.g., "house")
-    buildYear: number; // Year the property was built
-    size: number; // Size of the property in square feet/meters
-    lotSize: number; // Size of the lot in square feet/meters
-    amenities: string[]; // List of amenities (e.g., ["pool", "garage"])
-    images: string[]; // Array of image URLs
-    mapLocation: { // Coordinates of the property
-      lat: number; // Latitude
-      lng: number; // Longitude
-    };
-    reviews: IReview[]; // Array of reviews for the property
-    category: string; // Category of the property (e.g., residential, commercial)
+    title: "",
+    description: "",
+    price: 0,
+    location: { type: "Point", coordinates: [number, number] }, // Default structure
+    type: "",
+    buildYear: 0,
+    size: "",
+    lotSize: "",
+    amenities: string[],
+    images: [],
+    reviews: [],
+    category: "",
   }

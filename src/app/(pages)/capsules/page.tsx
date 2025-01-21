@@ -17,8 +17,8 @@ const GoogleAuth = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "1092778869689-egbbkv6e16ovjmsf3lf3ls88tk888jgo.apps.googleusercontent.com"}>
-      <div className="flex flex-col items-center justify-center h-screen">
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "865210211194-gvjr8lqd9sumskckboaj7aa1sqhgb2lg.apps.googleusercontent.com"}>
+      <div className="flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Login with Google</h1>
         <button
           className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600"

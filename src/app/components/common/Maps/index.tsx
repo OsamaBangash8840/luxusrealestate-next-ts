@@ -1,48 +1,47 @@
-"use client";
+'use client';
+import { useEffect, useState, memo } from "react";
+import dynamic from "next/dynamic";
 
-import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
-import "leaflet/dist/leaflet.css";
+// Dynamically import MapContainer component
+const MapWithNoSSR = dynamic(
+  () => import('./DynamicMap'),
+  {
+    ssr: false,
+    loading: () => <div style={{ height: "500px", width: "100%", background: "#f0f0f0" }}>Loading map...</div>
+  }
+);
 
-const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ssr: false });
+interface MarkerType {
+  id: string;
+  location: { coordinates: [number, number] };
+  title: string;
+  description: string;
+}
 
-export const Map = ({ center, markers, fetchData }) => {
-    const [isClient, setIsClient] = useState(false);
+interface MapProps {
+  center: [number, number];
+  markers: MarkerType[];
+  fetchData: (bounds: {
+    neLat: number;
+    neLng: number;
+    swLat: number;
+    swLng: number;
+  }) => void;
+}
 
-    useEffect(() => {
-        setIsClient(true); // Ensure rendering on the client
-    }, []);
+const Map: React.FC<MapProps> = memo(({ center, markers, fetchData }) => {
+  const [mounted, setMounted] = useState(false);
 
-    if (!isClient) return null; // Avoid SSR issues
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
-    return (
-        <MapContainer
-            key={`${center[0]}-${center[1]}`} // Unique key to prevent reinitialization
-            center={center}
-            zoom={12}
-            style={{ height: "500px", width: "100%" }}
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {markers.map((marker) => (
-                <Marker
-                    key={marker.id}
-                    position={[
-                        marker.location.coordinates[1], // Latitude
-                        marker.location.coordinates[0], // Longitude
-                    ]}
-                >
-                    <Popup>
-                        <h2>{marker.title}</h2>
-                        <p>{marker.description}</p>
-                    </Popup>
-                </Marker>
-            ))}
-        </MapContainer>
-    );
-};
+  if (!mounted) return null;
+
+  return <MapWithNoSSR center={center} markers={markers} fetchData={fetchData} />;
+});
+
+Map.displayName = 'Map';
+
+export default Map;
