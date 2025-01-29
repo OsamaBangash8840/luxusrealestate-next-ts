@@ -1,22 +1,24 @@
 export interface IRegisterUser {
-    name:string;
-    email: string;
-    password: string;
+  username: string
+  email: string
+  password: string
+  role: 'buyer' | 'seller' | 'admin'
 }
 
 export interface IData {
-    registerUser : IRegisterUser;
-    token: string;
+  registerUser: IRegisterUser
+  token: string
 }
 
-export interface IRegisterUserResponse{
-    success:boolean;
-    data : IData;
-    error : string | null;
+export interface IRegisterUserResponse {
+  success: boolean
+  data: IData
+  error: string | null
 }
 
 export interface IRegisterRequestBody {
-    name: string;
-    email: string;
-    password: string;
+  username: string
+  email: string
+  password: string
+  role: 'buyer' | 'seller' | 'admin'
 }

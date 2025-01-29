@@ -1,15 +1,15 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import axiosBaseQuery from "../axiosBaseQuery";
-import { IPropertiesPayload, IProperty } from "./types";
+import { createApi } from '@reduxjs/toolkit/query/react'
+import axiosBaseQuery from '../axiosBaseQuery'
+import { IPropertiesPayload, IProperty } from './types'
 
 export const propertiesApiSlice = createApi({
   baseQuery: axiosBaseQuery(),
   reducerPath: 'propertiesApi',
-  tagTypes: [], // You can define tags for caching if needed
+  tagTypes: [],
   endpoints: (build) => ({
     getProperty: build.query<IProperty[], void>({
       query: () => ({
-        url: 'api/properties', // Adjust the URL based on your backend API endpoint
+        url: 'api/properties',
         method: 'GET',
       }),
     }),
@@ -17,13 +17,24 @@ export const propertiesApiSlice = createApi({
       query: (payload) => ({
         url: 'api/properties',
         method: 'POST',
-        body: payload, // Correctly specify the body
+        body: payload, // Use "body" for the payload
         headers: {
-          'Content-Type': 'application/json', // Explicitly set the content type
+          'Content-Type': 'application/json',
         },
       }),
     }),
+    getSingleProperty: build.query<IPropertiesPayload, string>({
+      // Updated endpoint name
+      query: (id) => ({
+        url: `api/properties/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
-});
+})
 
-export const { useGetPropertyQuery, useAddPropertyMutation } = propertiesApiSlice;
+export const {
+  useGetPropertyQuery,
+  useAddPropertyMutation,
+  useGetSinglePropertyQuery, // Corrected hook name
+} = propertiesApiSlice

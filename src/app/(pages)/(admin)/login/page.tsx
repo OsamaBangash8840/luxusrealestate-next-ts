@@ -1,4 +1,4 @@
-import { LoginMain } from '@/app/components/admin/login/LoginMain';
+import { LoginMain } from '@/app/components/admin/login';
 import React from 'react';
 
 const AdminLoginPage = (): React.ReactElement => <LoginMain />;

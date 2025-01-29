@@ -5,15 +5,17 @@ import { Card, CardContent } from "../../shadcn/card";
 interface CardProps {
     className ?: string;
     children ?: React.ReactNode;
+    onClick ?: ()=>void;
 }
 
 export const Cards:React.FC<CardProps>=({
     className,
-    children
+    children,
+    onClick
 })=>{
     return (
         <Card>
-            <CardContent className={className}>
+            <CardContent className={className} onClick={onClick}>
                 {children}
             </CardContent>
         </Card>

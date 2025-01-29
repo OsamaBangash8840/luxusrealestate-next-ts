@@ -1,83 +1,50 @@
-'use client';
-import React, { useState, useCallback } from "react";
-import axios from "axios";
-import Map from "../Maps";
+'use client'
+import React, { useState } from 'react'
+import axios from 'axios'
 
-interface MarkerType {
-  id: string;
-  location: {
-    coordinates: [number, number];
-  };
-  title: string;
-  description: string;
-}
+const SearchBar = ({
+  onSearch,
+}: {
+  onSearch: (text: string, latitude: number, longitude: number) => void
+}) => {
+  const [searchText, setSearchText] = useState('')
+  const [lat, setLat] = useState<number | null>(null)
+  const [lng, setLng] = useState<number | null>(null)
 
-const SearchPage = (): React.ReactElement => {
-  const [center] = useState<[number, number]>([39.0997, -94.5786]);
-  const [markers, setMarkers] = useState<MarkerType[]>([]);
-  const [maxDistance, setMaxDistance] = useState<number>(50000);
-  const [category, setCategory] = useState<string>("");
-
-  const fetchData = useCallback(async (bounds: {
-    neLat: number;
-    neLng: number;
-    swLat: number;
-    swLng: number;
-  }) => {
+  const handleSearch = async () => {
     try {
-      const response = await axios.get<MarkerType[]>(
-        "http://localhost:8000/api/properties/search",
-        {
-          params: {
-            bounds,
-            maxDistance,
-            category,
-          },
-        }
-      );
-      setMarkers(response.data);
-    } catch (error: any) {
-      console.error("Error fetching data:", error.response || error.message);
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchText}.json?access_token=pk.eyJ1IjoiZGVtb3VzZXIiLCJhIjoiY2xnbXB3N2l2MDFmODNzbzFsbTYxZnUwMSJ9.zLzyYNdvZBImIoZOeGHRyg`
+      )
+      const { center } = response.data.features[0]
+      setLat(center[1])
+      setLng(center[0])
+      onSearch(searchText, center[1], center[0])
+    } catch (error) {
+      console.error('Error geocoding search text:', error)
     }
-  }, [maxDistance, category]);
+  }
 
   return (
-    <div className="p-4">
-      <div className="filters mb-4 space-y-4 md:space-y-0 md:flex md:space-x-4">
-        <label className="block">
-          <span className="text-gray-700">Category:</span>
-          <select
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">All</option>
-            <option value="apartment">Apartment</option>
-            <option value="condo">Condo</option>
-            <option value="house">House</option>
-            <option value="villa">Villa</option>
-            <option value="shop">Shop</option>
-            <option value="office">Office</option>
-          </select>
-        </label>
-
-        <label className="block">
-          <span className="text-gray-700">Max Distance (meters):</span>
-          <input
-            type="number"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={maxDistance}
-            onChange={(e) => setMaxDistance(Number(e.target.value))}
-            min="0"
-          />
-        </label>
-      </div>
-
-      <div className="map-container rounded-lg overflow-hidden shadow-lg">
-        <Map center={center} markers={markers} fetchData={fetchData} />
+    <div className="bg-gray-100 p-4">
+      <h2 className="text-lg font-bold mb-4">Search</h2>
+      <div className="flex">
+        <input
+          type="text"
+          placeholder="Address, neighborhood, city..."
+          className="flex-1 border-gray-300 rounded-md mr-2"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchPage;
+export default SearchBar
