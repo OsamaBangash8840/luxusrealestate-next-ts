@@ -1,21 +1,34 @@
 export interface ILoginUser {
-    email: string;
-    password: string;
+  email: string
+  password: string
 }
 
 export interface IData {
-    message: string;
-    loginUser: ILoginUser;
-    token: string;
+  message: string
+  loginUser: ILoginUser
+  token: string
 }
 
 export interface IUserLoginResponse {
-    success: boolean;
-    data: IData;
-    error: string | null;
+  success: boolean
+  data: IData
+  error: string | null
 }
 
 export interface IUserRequestBody {
-    email: string;
-    password: string;
+  email: string
+  password: string
+}
+
+export interface IForgetRequestBody {
+  email: string
+}
+export interface IForgetData {
+  message: string
+  forgetPass: IForgetRequestBody
+}
+export interface IForgetPassResponse {
+  success: boolean
+  data: IForgetData
+  error: string | null
 }

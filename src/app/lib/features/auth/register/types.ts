@@ -3,6 +3,7 @@ export interface IRegisterUser {
   email: string
   password: string
   role: 'buyer' | 'seller' | 'admin'
+  phone: string
 }
 
 export interface IData {
@@ -21,4 +22,5 @@ export interface IRegisterRequestBody {
   email: string
   password: string
   role: 'buyer' | 'seller' | 'admin'
+  phone: string
 }

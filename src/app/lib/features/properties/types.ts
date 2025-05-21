@@ -13,6 +13,7 @@ export interface IProperty {
   images: string[]
   reviews: []
   category: ''
+  status: 'approved' | 'pending' | 'rejected'
 }
 
 // Represents a review for a property
@@ -32,6 +33,11 @@ export interface IPropertyResponse {
 
 // Payload for creating or updating a property (e.g., from a form)
 export interface IPropertiesPayload {
+  seller: {
+    phone: any
+    email: any
+  }
+  status: string
   title: ''
   description: ''
   price: 0
@@ -44,4 +50,5 @@ export interface IPropertiesPayload {
   images: string[]
   reviews: []
   category: ''
+  rejectionReason: string
 }

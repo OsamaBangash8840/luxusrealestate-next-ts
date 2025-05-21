@@ -4,16 +4,17 @@ export const routes = {
   login: '/login',
   properties: '/properties',
   property: '/property/:id',
-  addProperty: '/properties/addproperty',
+  addProperty: '/properties/addProperty',
   editProperty: '/editProperty/:id',
   register: '/signup',
-  profile: '/profile',
   logout: '/logout',
   about: '/about',
   contact: '/contact',
   verifyEmail: '/verify-email',
   resendEmail: '/resend-email',
   emailSent: 'verify-email-sent',
+  profile: 'user/profile',
+  updateProfile: 'profile/update',
 }
 
 export const protectedRoutes = [

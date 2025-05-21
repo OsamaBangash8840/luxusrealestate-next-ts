@@ -8,9 +8,14 @@ import { uploadImgSpliceApi } from './features/uploadImages/uploadImgSpliceApi'
 import { contactApiSplice } from './features/contact/contactApiSplice'
 import { googleAuthApiSlice } from './features/auth/google/googleApiSlice'
 import { verifyEmailApiSlice } from './features/auth/verifyEmail/verifyEmailApiSlice'
+import { profileApiSlice } from './features/profile/profileApiSlice'
+import { adminApiSlice } from './features/auth/admin/adminApiSlice'
+import { propertyStatusApiSlice } from './features/auth/admin/dashboard/propertyStatus/propertyStatusApiSlice'
+import { adminPropertiesApiSlice } from './features/auth/admin/dashboard/propertyStatus/AllProperties/adminPropertiesApiSlice'
+import { chatSlice } from './features/chat/chatSlice'
+import { chatApi } from './features/chat/chatApi' // Import chatApi
+import { scheduleTourApiSlice } from './features/scheduleTours/scheduleToursApiSlice'
 
-// `combineSlices` automatically combines the reducers using
-// their `reducerPath`s, therefore we no longer need to call `combineReducers`.
 const rootReducer = combineSlices(
   counterSlice,
   quotesApiSlice,
@@ -20,21 +25,24 @@ const rootReducer = combineSlices(
   uploadImgSpliceApi,
   contactApiSplice,
   googleAuthApiSlice,
-  verifyEmailApiSlice
+  verifyEmailApiSlice,
+  profileApiSlice,
+  adminApiSlice,
+  propertyStatusApiSlice,
+  adminPropertiesApiSlice,
+  chatSlice, // ✅ Added correctly as a slice reducer
+  chatApi, // ✅ Added correctly as an API slice,
+  scheduleTourApiSlice
 )
-// Infer the `RootState` type from the root reducer
+
+// ✅ Corrected `RootState`
 export type RootState = ReturnType<typeof rootReducer>
 
-// `makeStore` encapsulates the store configuration to allow
-// creating unique store instances, which is particularly important for
-// server-side rendering (SSR) scenarios. In SSR, separate store instances
-// are needed for each request to prevent cross-request state pollution.
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// ✅ Fixed `makeStore` function
 export const makeStore = () =>
   configureStore({
     reducer: rootReducer,
-    // Adding the api middleware enables caching, invalidation, polling,
-    // and other useful features of `rtk-query`.
+
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat([
         quotesApiSlice.middleware,
@@ -45,12 +53,17 @@ export const makeStore = () =>
         contactApiSplice.middleware,
         googleAuthApiSlice.middleware,
         verifyEmailApiSlice.middleware,
+        profileApiSlice.middleware,
+        adminApiSlice.middleware,
+        propertyStatusApiSlice.middleware,
+        adminPropertiesApiSlice.middleware,
+        chatApi.middleware, // ✅ Added chat API middleware
+        scheduleTourApiSlice.middleware,
       ]),
   })
 
-// Infer the return type of `makeStore`
+// ✅ Infer store types
 export type AppStore = ReturnType<typeof makeStore>
-// Infer the `AppDispatch` type from the store itself
 export type AppDispatch = AppStore['dispatch']
 export type AppThunk<ThunkReturnType = void> = ThunkAction<
   ThunkReturnType,

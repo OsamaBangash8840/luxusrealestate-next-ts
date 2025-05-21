@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { Typography } from '../../../common'
 // import { Button } from "@/app/components/common/Button";
-import AdminLoginPage from '@/app/(pages)/(admin)/login/page'
+import AdminLoginPage from '@/app/(pages)/(user)/login/page'
 import { routes } from '@/app/base/utils/constants'
 import { Button } from '@/app/components/common/Button'
 

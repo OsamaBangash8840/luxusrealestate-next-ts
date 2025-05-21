@@ -1,4 +1,4 @@
-import { VerifyEmailSent } from '@/app/components/admin/mailVerification/verifyEmailSent'
+import { VerifyEmailSent } from '@/app/components/user/mailVerification/verifyEmailSent'
 
 const VerifyEmailSentPage = (): React.ReactElement => <VerifyEmailSent />
 
