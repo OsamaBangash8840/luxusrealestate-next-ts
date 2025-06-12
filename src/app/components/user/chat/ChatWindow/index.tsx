@@ -1,84 +1,103 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { useGetMessagesQuery, useSendMessageMutation } from '@/app/lib/features/chat/chatApi'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/app/lib/store'
-import io from 'socket.io-client'
+'use client'
 
-const socket = io('http://localhost:8000')
+import { useEffect, useRef, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
+import { Typography } from '@/app/components/common'
+import { Button } from '@/app/components/common/Button'
+import { TextField } from '@/app/components/form'
 
-const ChatWindow = ({ conversationId }: any) => {
-  const user = useSelector((state: RootState) => state.auth.user)
-  const { data: messages, refetch } = useGetMessagesQuery(conversationId)
-  const [sendMessage] = useSendMessageMutation()
+export default function ChatPage() {
+  const socketRef = useRef<Socket | null>(null)
+  const [messages, setMessages] = useState<string[]>([])
   const [message, setMessage] = useState('')
-  const [typing, setTyping] = useState(false)
-  const messageEndRef = useRef(null)
+  const [room, setRoom] = useState('')
+  const [roomName, setRoomName] = useState('')
+  const [socketID, setSocketId] = useState('')
 
+  // Initialize and set up socket connection
   useEffect(() => {
-    socket.emit('joinConversation', { conversationId })
-
-    socket.on('newMessage', (newMsg) => {
-      if (newMsg.conversationId === conversationId) refetch()
+    socketRef.current = io('http://localhost:8000', {
+      withCredentials: true,
     })
 
-    socket.on('typing', ({ userId }) => {
-      if (userId !== user.id) setTyping(true)
+    socketRef.current.on('connect', () => {
+      setSocketId(socketRef.current?.id ?? '')
+      console.log('Connected:', socketRef.current?.id)
     })
 
-    socket.on('stopTyping', ({ userId }) => {
-      if (userId !== user.id) setTyping(false)
+    socketRef.current.on('receive-message', (data) => {
+      console.log('Received message:', data)
+
+      // If data is a string, use directly; if it's an object, extract the message
+      const content = typeof data === 'string' ? data : data.message
+      setMessages((prev) => [...prev, content])
+    })
+
+    socketRef.current.on('welcome', (msg) => {
+      console.log('Welcome message:', msg)
     })
 
     return () => {
-      socket.off('newMessage')
-      socket.off('typing')
-      socket.off('stopTyping')
+      socketRef.current?.disconnect()
     }
-  }, [conversationId, refetch, user.id])
+  }, [])
 
-  const handleSendMessage = async () => {
-    if (message.trim() === '') return
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!message.trim()) return
 
-    const msgData = {
-      conversationId,
-      senderId: user.id,
-      content: message,
-      messageType: 'text',
-      fileUrl: null,
-    }
-
-    await sendMessage(msgData)
-    socket.emit('newMessage', msgData)
+    socketRef.current?.emit('message', { message, room })
     setMessage('')
   }
 
-  const handleTyping = () => {
-    socket.emit('typing', { conversationId, userId: user.id })
-    setTimeout(() => socket.emit('stopTyping', { conversationId, userId: user.id }), 2000)
+  const handleJoinRoom = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!roomName.trim()) return
+
+    socketRef.current?.emit('join-room', roomName)
+    setRoomName('')
   }
 
   return (
-    <div>
-      <h2>Chat</h2>
-      <div>
-        {messages?.map((msg: any) => (
-          <p key={msg.id} style={{ color: msg.senderId === user.id ? 'blue' : 'black' }}>
-            {msg.content}
-          </p>
-        ))}
-        {typing && <p>Someone is typing...</p>}
+    <div className="p-4">
+      <Typography variant="h5">Socket ID: {socketID}</Typography>
+
+      <div className="overflow-y-auto border mb-4 p-4 space-y-4 max-h-[400px]">
+        {/* Join Room Form */}
+        <form onSubmit={handleJoinRoom} className="space-y-2">
+          <Typography variant="h5">Join Room</Typography>
+          <TextField
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
+            placeholder="Room Name"
+          />
+          <Button type="submit" className="text-primary">
+            Join
+          </Button>
+        </form>
+
+        {/* Send Message Form */}
+        <form onSubmit={handleSendMessage} className="space-y-2">
+          <TextField
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Message"
+          />
+          <TextField value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Room" />
+          <Button type="submit" className="text-primary">
+            Send
+          </Button>
+        </form>
+
+        {/* Display Messages */}
+        <div className="space-y-2 mt-4">
+          {messages.map((m, i) => (
+            <Typography key={i} variant="h3">
+              {m}
+            </Typography>
+          ))}
+        </div>
       </div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => {
-          setMessage(e.target.value)
-          handleTyping()
-        }}
-      />
-      <button onClick={handleSendMessage}>Send</button>
     </div>
   )
 }
-
-export default ChatWindow

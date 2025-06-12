@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import ChatList from './ChatList'
-import ChatWindow from './ChatWindow'
+// import ChatWindow from './ChatWindow'
 
 const ChatApp = () => {
   const [selectedConversation, setSelectedConversation] = useState(null)
@@ -11,13 +11,13 @@ const ChatApp = () => {
       <div style={{ width: '30%' }}>
         <ChatList selectConversation={setSelectedConversation} />
       </div>
-      <div style={{ width: '70%' }}>
+      {/* <div style={{ width: '70%' }}>
         {selectedConversation ? (
-          <ChatWindow conversationId={selectedConversation} />
+          // <ChatWindow conversationId={selectedConversation} />
         ) : (
           <p>Select a conversation to start chatting.</p>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }

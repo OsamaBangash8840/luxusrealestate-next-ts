@@ -12,6 +12,7 @@ import { PropertyStatusButtons } from '../../admin/dashboard/properties/property
 import { ScheduleTour } from '../scheduleTour'
 import { toast } from 'react-toastify'
 import { ContactSeller } from '../../contact/contactSeller'
+import { API_KEY } from '../PropertiesList'
 
 // Dynamically import the SinglePropertyMap
 const SinglePropertyMap = dynamic(() => import('../../common/Maps/SinglePropertyMap'), {
@@ -54,7 +55,7 @@ export const SingleProperty = ({
   useEffect(() => {
     if (property?.location?.coordinates) {
       const reverseGeocode = async (lat: number, lng: number) => {
-        const url = `http://api.positionstack.com/v1/reverse?access_key=YOUR_ACCESS_KEY&query=${lat},${lng}&output=json`
+        const url = `http://api.positionstack.com/v1/reverse?access_key=${API_KEY}&query=${lat},${lng}&output=json`
 
         try {
           const response = await axios.get(url)

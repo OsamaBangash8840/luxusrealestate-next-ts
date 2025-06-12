@@ -24,7 +24,7 @@ export const ContactSeller: React.FC<contactSellerProps> = ({ propertyId, isOpen
       <Modal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        className="sm:max-w-[600px] max-h-[94%] overflow-y-auto sm:p-5 pt-5"
+        className="sm:max-w-[600px] max-h-[94%] overflow-y-auto sm:p-2 pt-5"
       >
         <div className="flex gap-3 px-5 py-4">
           <Button

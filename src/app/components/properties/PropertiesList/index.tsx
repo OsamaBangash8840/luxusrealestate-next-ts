@@ -7,7 +7,7 @@ import { SingleProperty } from '@/app/components/properties/SingleProperty'
 import { PropertyCard } from '@/app/components/common/PropertyCard'
 import PropertySearch from '../../common/SearchBar'
 
-const API_KEY = '63286d2185d3b4e90728e054b59870df'
+export const API_KEY = '63286d2185d3b4e90728e054b59870df'
 
 export const PropertiesList = (): React.ReactElement => {
   const { data, error, isLoading } = useGetPropertyQuery()
@@ -65,19 +65,16 @@ export const PropertiesList = (): React.ReactElement => {
 
       {!searchTriggered && ( // Only show this section when there's no search input
         <div className="grid  grid-cols sm:grid-cols-[200px_200px] md:grid-cols-[300px_300px_300px_300px] 2xl:grid-cols-4 2xl:px-48 px-5 sm:px-20 gap-3">
-          {data?.map((property) => {
-            if (property.status === 'pending' || property.status === 'rejected') {
-              return <div key={property._id}></div>
-            }
-            return (
+          {data
+            ?.filter((property) => property.status !== 'pending' && property.status !== 'rejected')
+            .map((property) => (
               <PropertyCard
                 key={property._id}
                 property={property}
                 address={addresses[property._id] || 'Loading address...'}
                 onClick={() => handlePropertyClick(property._id)}
               />
-            )
-          })}
+            ))}
         </div>
       )}
 

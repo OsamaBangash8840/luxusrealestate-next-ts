@@ -1,5 +1,11 @@
-import ChatApp from '@/app/components/user/chat'
+// In your chat page component
 
-const ChatPage = (): React.ReactElement => <ChatApp />
+import ChatApp from '@/app/components/user/chat/ChatWindow'
 
-export default ChatPage
+export default function ChatPage() {
+  return (
+    <div className="h-screen">
+      <ChatApp />
+    </div>
+  )
+}
