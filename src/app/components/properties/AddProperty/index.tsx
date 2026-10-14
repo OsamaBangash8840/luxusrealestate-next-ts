@@ -133,7 +133,7 @@ export const AddProperty = (): React.ReactElement => {
   }
 
   return (
-    <div className="max-w-screen-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-(--breakpoint-lg) mx-auto p-6 bg-white rounded-lg shadow-md">
       <Typography variant="h1" className=" text-center mb-2 p-2">
         Add Property Form
       </Typography>
@@ -174,7 +174,7 @@ export const AddProperty = (): React.ReactElement => {
             name="category"
             value={payload.category}
             onChange={handleChange}
-            className="w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] shadow-lg xl:h-[56px] rounded-xl outline-none border border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base p-2"
+            className="w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] shadow-lg xl:h-[56px] rounded-xl outline-hidden border border-boxOutline focus:border-primary bg-bgBox bg-opacity-80 text-sm sm:text-base p-2"
           >
             <option value="" disabled>
               Select Category
@@ -283,7 +283,7 @@ export const AddProperty = (): React.ReactElement => {
         </div>
 
         <div className="mb-2">
-          <label className="w-full h-[112px] bg-gradient-to-t from-newLinear/20 to-newLinear/30 flex flex-col items-center justify-center p-4 border border-dashed border-newLinear  shadow-newLinear rounded-lg cursor-pointer hover:border-gray-400 shadow-lg">
+          <label className="w-full h-[112px] bg-linear-to-t from-newLinear/20 to-newLinear/30 flex flex-col items-center justify-center p-4 border border-dashed border-newLinear  shadow-newLinear rounded-lg cursor-pointer hover:border-gray-400 shadow-lg">
             <IoCloudUploadOutline className="text-2xl text-secondary" />
             <Typography className="mt-2">Upload Property images</Typography>
             <input type="file" multiple onChange={handleImageChange} className="hidden" />

@@ -17,14 +17,14 @@ export const VerifyEmailSent = () => {
           <div className="mt-6 space-y-4">
             <Link
               href="/resend-email"
-              className="block w-full text-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="block w-full text-center px-4 py-2 border border-transparent rounded-md shadow-xs text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
               Resend verification email
             </Link>
 
             <Link
               href="/login"
-              className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="block w-full text-center px-4 py-2 border border-gray-300 rounded-md shadow-xs text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               Back to login
             </Link>

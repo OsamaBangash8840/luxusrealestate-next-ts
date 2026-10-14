@@ -23,8 +23,8 @@ function Header({
     })
 
   return (
-    <header className="w-full  sticky top-0 px-1 py-[20px] bg-[#fff]   flex items-center justify-between z-50">
-      <button onClick={toggleSidebar} className="text-gray-800 md:hidden focus:outline-none">
+    <header className="w-full  sticky top-0 px-1 py-[20px] bg-white   flex items-center justify-between z-50">
+      <button onClick={toggleSidebar} className="text-gray-800 md:hidden focus:outline-hidden">
         <AiOutlineMenu size={24} />
       </button>
 

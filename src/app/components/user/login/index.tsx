@@ -144,7 +144,7 @@ export const LoginMain = (): React.ReactElement => {
       <Modal className="max-w-[630px]" isOpen={isOpen} setIsOpen={setIsOpen}>
         <div className="flex w-full overflow-hidden rounded-lg">
           {/* Left Section */}
-          <div className="w-1/2 bg-gradient-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
+          <div className="w-1/2 bg-linear-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
             <Typography variant="h3" className="text-white mb-2">
               Luxus Real Estate
             </Typography>

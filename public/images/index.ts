@@ -1,4 +1,4 @@
-import AppLogo from './Logo_maker_project__1_-removebg-preview.png'
+import AppLogo from './logo.svg'
 import Slider1 from './17809.jpg'
 import Slider2 from './2147941488.jpg'
 import Slider3 from './2149383566.jpg'

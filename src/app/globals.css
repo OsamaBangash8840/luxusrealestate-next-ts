@@ -1,51 +1,148 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: #0ea5a4;
+  --color-secondary: #f1f5f9;
+  --color-secondaryLight: #9CA3B1;
+  --color-background: #ffff;
+  --color-foreground: #0f172a;
+  --color-border:#00000014;
+  --color-input: #f8fafc;
+  --color-PrimaryForeground: #ffffff;
+  --color-SecondaryForeground: #0f172a;
+  --color-muted:#f3f4f6;
+  --color-mutedForeground: #6b7280;
+  --color-succes:#ecfdf5;
+  --color-successForeground: #059669;
+  --color-accent:#fde68a;
+  --color-accentForeground: #92400e;
+  --color-destructive:#fef2f2;
+  --color-destructiveForeground: #dc2626;
+  --color-warning:#fff7ed;
+  --color-warningForeground: #b45309;
+  --color-card:#ffffff;
+  --color-cardForeground: #0f172a;
+  --color-sidebar:#f8fafc;
+  --color-sidebarForeground: #0f172a;
+  --color-sidebarPrimary: #0ea5a4;
+  --color-sidebarPrimaryForeground: #ffffff;
+  
+  
+
+  /* --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground)); */
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-
-.homepage-carousel {
-  position: relative;
+.container {
+  width: 90%;
   max-width: 1440px;
-  margin: 0 auto;
-  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.slide {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* Full viewport height */
-}
 
-/* Adjustments for mobile and tablet */
-@media (max-width: 768px) {
-  .slide {
-    height: 75vh; /* Reduce the height on smaller screens */
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
 }
 
-@media (max-width: 480px) {
-  .slide {
-    height: 60vh; /* Further reduce height for smaller screens */
+@layer utilities {
+
+  .homepage-carousel {
+    position: relative;
+    max-width: 1440px;
+    margin: 0 auto;
+    overflow: hidden;
   }
-}
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1rem;  /* Padding for smaller screens */
-  text-align: center;
-}
+  .slide {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+  }
 
-@media (max-width: 768px) {
+  /* Adjustments for mobile and tablet */
+  @media (max-width: 768px) {
+    .slide {
+      height: 75vh; /* Reduce the height on smaller screens */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .slide {
+      height: 60vh; /* Further reduce height for smaller screens */
+    }
+  }
+
   .overlay {
-    padding: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem; /* Padding for smaller screens */
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .overlay {
+      padding: 0.5rem;
+    }
   }
 }
 

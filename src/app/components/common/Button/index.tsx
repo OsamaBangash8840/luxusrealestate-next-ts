@@ -1,50 +1,71 @@
-import React from "react";
-import Link from "next/link";
+'use client'
 
-interface ButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
-  className?: string;
-  href?: string; // Optional href for linking
-  type?: string;
-  disabled?: boolean;
+import React, { type ButtonHTMLAttributes } from 'react'
+import Link from 'next/link'
+
+interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
+  title?: string
+  className?: string
+  loading?: boolean
+  variant?: 'outline' | 'primary' | 'login' | 'services'
+  icon?: React.ReactElement
+  iconPosition?: 'left' | 'right'
+  href?: string
+  children?: React.ReactNode
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  onClick,
-  children,
+export const Button = ({
+  title,
   className = '',
-  disabled = false,
+  loading = false,
+  variant = 'primary',
+  icon,
+  iconPosition = 'right',
   href,
-}) => {
-  const baseClasses =
-    'block flex-1 h-[32px] sm:h-[48px] px-6 py-4 mt-4 rounded-md font-bold flex justify-center items-center text-sm sm:text-base text-primary border-2 border-primary focus:outline-none hover:opacity-80 transition-colors';
+  children,
+  ...rest
+}: IButton): React.ReactElement => {
+  // Base styles WITHOUT colors or hovers that bleed into variants
+  const baseStyles =
+    'inline-flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer font-semibold disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden'
 
-  const disabledClasses = disabled
-    ? 'opacity-50 cursor-not-allowed' // Styling for disabled state
-    : '';
-
-  // Render as Link if href exists
-  if (href) {
-    return (
-      <Link
-        href={href}
-        onClick={onClick}
-        className={`${baseClasses} ${className} ${disabledClasses}`}
-      >
-        {children}
-      </Link>
-    );
+  const variantStyles = {
+    outline:
+      'text-[14px] bg-white text-primary border-2 border-primary px-6 py-3 rounded-[20px] w-full  hover:bg-primary hover:text-white',
+    primary:
+      'text-[14px] bg-primary text-white border-2 border-primary px-6 py-3 rounded-[20px] hover:bg-white hover:text-primary',
+    login:
+      ' text-[14px] text-foreground bg-transparent border-2 border-transparent px-4 py-2 hover:border-primary hover:text-primary rounded-md',
+    services:
+      ' text-[14px] text-primary border-2 border-primary bg-transparent px-6 py-2 hover:bg-primary hover:text-white rounded-full',
   }
 
-  // Render as button if href is not provided
+  const combinedClasses = `${baseStyles} ${variantStyles[variant]} ${className}`
+
+  const content = (
+    <>
+      {icon && iconPosition === 'left' && <span className="text-[1.2em]">{icon}</span>}
+      {loading ? 'Loading...' : title}
+      {children}
+      {icon && iconPosition === 'right' && <span className="text-[1.2em]">{icon}</span>}
+    </>
+  )
+
+  if (href) {
+    return (
+      <Link href={href} className={combinedClasses}>
+        {content}
+      </Link>
+    )
+  }
+
   return (
     <button
-      onClick={onClick}
-      disabled={disabled} // Ensure the button is properly disabled
-      className={`${baseClasses} ${className} ${disabledClasses}`}
+      className={combinedClasses}
+      disabled={loading}
+      {...rest}
     >
-      {children}
+      {content}
     </button>
-  );
-};
+  )
+}

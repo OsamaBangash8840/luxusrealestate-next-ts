@@ -1,0 +1,70 @@
+const fs = require('fs');
+const targetFile = 'd:/Clones/luxus-main-apis/server_clone/.github/workflows/deploy.yml';
+
+const workflowContent = `name: Test and Deploy Luxus Backend to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Unit & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Test Suite
+        run: npm test
+
+  deploy:
+    name: Deploy to EC2
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: SSH into EC2 & Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: \${{ secrets.EC2_HOST }}
+          username: \${{ secrets.EC2_USER }}
+          key: \${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            # Load environment PATH so PM2 & Node are available
+            export PATH=$PATH:/usr/bin:/usr/local/bin
+
+            echo "🚀 Navigating to project directory..."
+            cd /var/www/backend
+
+            echo "📥 Pulling latest changes from GitHub..."
+            git pull origin main
+
+            echo "📦 Installing any new dependencies..."
+            npm install --production
+
+            echo "🔄 Restarting backend with PM2..."
+            pm2 restart luxus-backend
+
+            echo "💾 Saving PM2 process list..."
+            pm2 save
+
+            echo "✅ Deployment completed successfully!"
+`;
+
+fs.writeFileSync(targetFile, workflowContent, 'utf8');
+console.log('deploy.yml updated with pre-deploy testing pipeline!');

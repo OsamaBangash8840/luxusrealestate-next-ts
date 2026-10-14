@@ -85,7 +85,7 @@ export const Newsletter = (): React.ReactElement => {
           value={payload.email}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full py-3 pl-4 pr-[6rem] text-[12px] sm:text-[16px] text-primary bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary"
+          className="w-full py-3 pl-4 pr-24 text-[12px] sm:text-[16px] text-primary bg-white rounded-full shadow-lg focus:outline-hidden focus:ring-2 focus:ring-secondary"
         />
         <button
           type="submit"

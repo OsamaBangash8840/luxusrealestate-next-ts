@@ -43,29 +43,29 @@ const tags: Record<variant, ElementType> = {
 };
 
 const sizes: Record<variant, string> = {
-    h1: 'text-xl sm:text-2xl lg:text-3xl !leading-auto font-bold font-heading text-secondary',
-    h2: 'text-xl sm:text-xl lg:text-[26px] leading-auto font-bold font-heading text-secondary',
-    h3: 'text-lg md:text-xl lg:text-[22px] !leading-[34px] font-bold font-heading text-secondary',
-    h4: 'text-lg md:text-xl lg:text-xl !leading-2xl font-bold font-heading text-secondary',
+    h1: 'text-2xl sm:text-4xl lg:text-6xl !leading-auto font-bold font-heading text-foreground',
+    h2: 'text-xl sm:text-3xl lg:text-5xl leading-auto font-bold font-heading text-foreground',
+    h3: 'text-lg md:text-3xl lg:text-4xl leading-[34px]! font-bold font-heading text-foreground',
+    h4: 'text-lg md:text-2xl lg:text-3xl !leading-2xl font-bold font-heading text-foreground',
     h4Light:
-        'text-lg md:text-xl lg:text-xl font-normal font-heading text-secondary',
-    h5: 'text-base sm:text-lg leading-auto font-normal font-heading text-secondary',
-    h5Light: 'text-base sm:text-lg font-heading text-secondary',
-    h5Bold: 'text-base sm:text-lg font-medium font-heading text-secondary',
+        'text-lg md:text-2xl lg:text-3xl font-normal font-heading text-foreground',
+    h5: 'text-base sm:text-xl lg:text-2xl leading-auto font-normal font-heading text-foreground',
+    h5Light: 'text-base sm:text-xl lg:text-2xl font-heading text-foreground',
+    h5Bold: 'text-base sm:text-xl lg:text-2xl font-medium font-heading text-foreground',
 
-    bodyRegular: 'text-sm sm:text-base font-body text-secondary',
-    bodyMedium: 'text-sm sm:text-base font-normal font-body text-secondary',
-    bodyBold: 'text-sm sm:text-base font-bold font-body text-secondary',
+    bodyRegular: 'text-sm sm:text-base font-body text-foreground',
+    bodyMedium: 'text-sm sm:text-base font-normal font-body text-foreground',
+    bodyBold: 'text-sm sm:text-base font-bold font-body text-foreground',
 
-    smallRegular: 'text-xs sm:text-sm font-body text-secondary',
-    smallMedium: 'text-xs sm:text-sm font-medium font-body text-secondary',
-    smallBold: 'text-xs sm:text-sm font-bold font-body text-secondary',
+    smallRegular: 'text-xs sm:text-sm font-body text-foreground',
+    smallMedium: 'text-xs sm:text-sm font-medium font-body text-foreground',
+    smallBold: 'text-xs sm:text-sm font-bold font-body text-foreground',
 
     extraSmallRegular:
-        'text-[11px] sm:text-xs font-normal font-body text-secondary',
+        'text-[11px] sm:text-xs font-normal font-body text-foreground',
     extraSmallMedium:
-        'text-[11px] sm:text-xs font-meduim font-body text-secondary',
-    extraSmallBold: 'text-[11px] sm:text-xs font-bold font-body text-secondary',
+        'text-[11px] sm:text-xs font-meduim font-body text-foreground',
+    extraSmallBold: 'text-[11px] sm:text-xs font-bold font-body text-foreground',
 };
 
 interface Props {

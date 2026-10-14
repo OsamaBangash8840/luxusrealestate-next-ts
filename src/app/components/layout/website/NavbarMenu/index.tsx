@@ -16,7 +16,7 @@ export const NavMenu = (): React.ReactElement => {
       {/* Hamburger Icon for Small and Medium Screens */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="block md:block lg:hidden text-black focus:outline-none"
+        className="block md:block lg:hidden text-black focus:outline-hidden"
       >
         <svg
           className="w-6 h-6"
@@ -52,7 +52,7 @@ export const NavMenu = (): React.ReactElement => {
         {/* Close Button */}
         <button
           onClick={() => setIsMenuOpen(false)}
-          className="absolute top-6 right-6 text-primary focus:outline-none lg:hidden"
+          className="absolute top-6 right-6 text-primary focus:outline-hidden lg:hidden"
         >
           <svg
             className="w-8 h-8"
@@ -76,8 +76,8 @@ export const NavMenu = (): React.ReactElement => {
             <Link href={item.route}>
               <span onClick={() => setIsMenuOpen(false)}>
                 <Typography
-                  variant="h5Light"
-                  className="hover:underline text-primary lg:text-black"
+                  variant="bodyRegular"
+                  className="hover:underline text-primary font-medium lg:text-black"
                 >
                   {item.name}
                 </Typography>

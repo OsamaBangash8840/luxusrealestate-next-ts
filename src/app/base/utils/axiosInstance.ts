@@ -12,7 +12,7 @@ interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
   headers: AxiosRequestHeaders
 }
 
-export const baseURL = 'http://localhost:8000/'
+export const baseURL = 'http://localhost:6000/'
 
 // Request Interceptor to add headers, including Authorization (if token is present)
 const onRequest = (config: AdaptAxiosRequestConfig): AdaptAxiosRequestConfig => {

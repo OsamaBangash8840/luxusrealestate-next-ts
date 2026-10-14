@@ -7,15 +7,11 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Navbar } from './components/layout/website'
 import { usePathname } from 'next/navigation'
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+import { Inter } from 'next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
 })
 
 export default function RootLayout({
@@ -32,7 +28,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <StoreProvider>
           <Navbar />
           {children}

@@ -33,7 +33,7 @@ export const PasswordField = ({
                 <input
                     type={show ? 'text' : 'password'}
                     placeholder={placeholder}
-                    className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] xl:h-[56px] rounded-full outline-none border border-boxOutline focus:border-primary bg-opacity-80 text-sm sm:text-base ${icon !== null ? 'pr-6 pl-[54px]' : 'px-6'}`}
+                    className={`w-full placeholder:text-secondary/30 bg-boxColorDark text-secondary h-[46px] xl:h-[56px] rounded-full outline-hidden border border-boxOutline focus:border-primary bg-opacity-80 text-sm sm:text-base ${icon !== null ? 'pr-6 pl-[54px]' : 'px-6'}`}
                     {...rest}
                 />
                 <button

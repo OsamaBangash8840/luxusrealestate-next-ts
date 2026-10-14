@@ -84,7 +84,7 @@ export const UpdateUserProfile = (): React.ReactElement => {
               value={payload.username}
               onChange={handleChange}
               disabled={isLoading}
-              className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
             />
             {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
           </div>
@@ -97,7 +97,7 @@ export const UpdateUserProfile = (): React.ReactElement => {
               value={payload.phone}
               onChange={handleChange}
               disabled={isLoading}
-              className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
             />
             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
           </div>
@@ -113,7 +113,7 @@ export const UpdateUserProfile = (): React.ReactElement => {
               value={payload.role}
               onChange={handleChange}
               disabled={isLoading}
-              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="mt-1 block w-full rounded-lg border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
             >
               <option value="buyer">Buyer</option>
               <option value="seller">Seller</option>

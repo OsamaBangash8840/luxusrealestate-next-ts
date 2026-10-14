@@ -114,7 +114,7 @@ export const ContactForm = (): React.ReactElement => {
             onChange={handleChange}
             className={`w-full p-2 border rounded-md ${
               errors.name ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring focus:ring-blue-200`}
+            } focus:outline-hidden focus:ring-3 focus:ring-blue-200`}
             placeholder="Enter your name"
           />
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -132,7 +132,7 @@ export const ContactForm = (): React.ReactElement => {
             onChange={handleChange}
             className={`w-full p-2 border rounded-md ${
               errors.email ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring focus:ring-blue-200`}
+            } focus:outline-hidden focus:ring-3 focus:ring-blue-200`}
             placeholder="Enter your email"
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -150,7 +150,7 @@ export const ContactForm = (): React.ReactElement => {
             onChange={handleChange}
             className={`w-full p-2 border rounded-md ${
               errors.mobile ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring focus:ring-blue-200`}
+            } focus:outline-hidden focus:ring-3 focus:ring-blue-200`}
             placeholder="Enter your mobile number"
           />
           {errors.mobile && <p className="text-red-500 text-sm">{errors.mobile}</p>}
@@ -168,7 +168,7 @@ export const ContactForm = (): React.ReactElement => {
             rows={4}
             className={`w-full p-2 border rounded-md ${
               errors.message ? "border-red-500" : "border-gray-300"
-            } focus:outline-none focus:ring focus:ring-blue-200`}
+            } focus:outline-hidden focus:ring-3 focus:ring-blue-200`}
             placeholder="Enter your message"
           />
           {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}

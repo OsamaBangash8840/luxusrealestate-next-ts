@@ -111,7 +111,7 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
           {/* Property Type Filter */}
           <select
             onChange={(e) => handleFilterChange('category', e.target.value)}
-            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Property Type</option>
             {categories.map((type) => (
@@ -124,7 +124,7 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
           {/* Location Filter */}
           <select
             onChange={(e) => handleFilterChange('location', e.target.value)}
-            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Location</option>
             {locations.map((location) => (
@@ -140,13 +140,13 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
               type="number"
               placeholder="Min Price"
               onChange={(e) => handleFilterChange('minPrice', Number(e.target.value))}
-              className="p-2 border rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 border rounded-lg w-1/2 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="number"
               placeholder="Max Price"
               onChange={(e) => handleFilterChange('maxPrice', Number(e.target.value))}
-              className="p-2 border rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 border rounded-lg w-1/2 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>

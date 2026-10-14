@@ -14,7 +14,7 @@ function Sidebar({ isActive, handleLinkClick, sidebarRef, isSidebarOpen }: any) 
     <div
       style={{ scrollbarWidth: 'none' }}
       ref={sidebarRef}
-      className={`fixed top-0 left-0 overflow-y-scroll min-w-[300px] text-nowrap md:relative z-40 bg-[#fff] text-[#000] w-64 md:w-1/6 py-[30px] px-[20px] h-full flex flex-col transform ${
+      className={`fixed top-0 left-0 overflow-y-scroll min-w-[300px] text-nowrap md:relative z-40 bg-white text-black w-64 md:w-1/6 py-[30px] px-[20px] h-full flex flex-col transform ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } md:translate-x-0 transition-transform duration-300 ease-in-out`}
     >

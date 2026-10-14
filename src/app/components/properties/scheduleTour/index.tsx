@@ -100,7 +100,7 @@ export const ScheduleTour: React.FC<ScheduleTourProps> = ({ propertyId, isOpen, 
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          // className="p-2 border rounded-md focus:ring focus:ring-blue-400"
+          // className="p-2 border rounded-md focus:ring-3 focus:ring-blue-400"
           placeholder={''}
         />
 
@@ -110,7 +110,7 @@ export const ScheduleTour: React.FC<ScheduleTourProps> = ({ propertyId, isOpen, 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          // className="p-2 border rounded-md focus:ring focus:ring-blue-400"
+          // className="p-2 border rounded-md focus:ring-3 focus:ring-blue-400"
           placeholder={''}
         />
 
@@ -120,7 +120,7 @@ export const ScheduleTour: React.FC<ScheduleTourProps> = ({ propertyId, isOpen, 
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           required
-          // className="p-2 border rounded-md focus:ring focus:ring-blue-400"
+          // className="p-2 border rounded-md focus:ring-3 focus:ring-blue-400"
           placeholder={''}
         />
 
@@ -143,7 +143,7 @@ export const ScheduleTour: React.FC<ScheduleTourProps> = ({ propertyId, isOpen, 
             value={selectedTime}
             onChange={(e) => setSelectedTime(e.target.value)}
             required
-            // className="p-2 border rounded-md focus:ring focus:ring-blue-400"
+            // className="p-2 border rounded-md focus:ring-3 focus:ring-blue-400"
           >
             <option value="">Choose a time</option>
             {data?.availableSlots?.length > 0 ? (
@@ -165,7 +165,7 @@ export const ScheduleTour: React.FC<ScheduleTourProps> = ({ propertyId, isOpen, 
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
-          // className="p-2 border rounded-md focus:ring focus:ring-blue-400"
+          // className="p-2 border rounded-md focus:ring-3 focus:ring-blue-400"
           placeholder={''}
         />
 

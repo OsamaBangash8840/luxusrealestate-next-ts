@@ -133,7 +133,7 @@ export const RegisterMain = (): React.ReactElement => {
       <Modal className="max-w-[690px] h-[90%]" isOpen={isOpen} setIsOpen={setIsOpen}>
         <div className="flex w-full overflow-hidden rounded-lg">
           {/* Left Section */}
-          <div className="w-1/2 bg-gradient-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
+          <div className="w-1/2 bg-linear-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
             <Typography variant="h3" className="text-white mb-2">
               Luxus Real Estate
             </Typography>
@@ -203,7 +203,7 @@ export const RegisterMain = (): React.ReactElement => {
                   value={payload.role}
                   onChange={handleChange}
                   disabled={isLoading}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                 >
                   <option value="buyer">Buyer</option>
                   <option value="seller">Seller</option>

@@ -18,22 +18,20 @@ export const Navbar = (): React.ReactElement => {
     setToken(typeof cookieToken === 'string' ? cookieToken : null) // Ensure it's a string
   }, [])
   return (
-    <div className="grid grid-cols-2 md:grid-cols-[20%_50%_25%] items-center lg:mt-[-50px] lg:mb-[-40px]">
-      <div className="flex justify-center">
+    <div className=" container flex items-center justify-between py-4 ">
+      <div className="flex shrink-0">
         <Link href={routes.home}>
-          <MImage src={Images.AppLogo} alt="logo" w={220} h={80} className="mx-auto" />
+          <MImage src={Images.AppLogo} alt="logo" w={120} h={80} className="mx-auto" />
         </Link>
       </div>
-      <div className="flex justify-end lg:justify-center mr-[60px] lg:mr-[0]">
+      <div className="flex-1 flex justify-center mr-[60px] lg:mr-0">
         <NavMenu />
       </div>
       {/* Buttons only visible on large screens */}
-      <div className="hidden lg:flex gap-3 ml-6">
-        <Button className="bg-primary text-white text-center" href={routes.addProperty}>
-          Add Property
-        </Button>
+      <div className="hidden lg:flex items-center gap-3 shrink-0">
+        <Button className=" text-foreground text-center !px-3" title="Log In" variant='login' />
         {token ? (
-          <Button className="border-white" href={routes.profile}>
+          <Button className="border-white" title="Profile">
             <MImage
               src={'https://via.placeholder.com/100'}
               alt="Profile"

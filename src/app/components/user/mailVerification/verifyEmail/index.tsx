@@ -61,7 +61,7 @@ export const VerifyEmail = () => {
             </p>
             <Link
               href="/login"
-              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-xs text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
               Continue to Login
             </Link>
@@ -75,7 +75,7 @@ export const VerifyEmail = () => {
             <p className="mt-2 text-red-600">{error}</p>
             <Link
               href="/resend-email"
-              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-xs text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
               Resend Verification Email
             </Link>
