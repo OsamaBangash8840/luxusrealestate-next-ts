@@ -1,11 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axiosBaseQuery from '../axiosBaseQuery'
-// import { ScheduleTour } from './types'
+
+export interface ICreatePaymentIntentResponse {
+  clientSecret: string
+  paymentIntentId: string
+}
 
 export const scheduleTourApiSlice = createApi({
   baseQuery: axiosBaseQuery(),
   reducerPath: 'scheduleTourApi',
-  tagTypes: [],
+  tagTypes: ['Tours'],
   endpoints: (build) => ({
     scheduleTour: build.mutation<
       void,
@@ -17,12 +21,26 @@ export const scheduleTourApiSlice = createApi({
         phone: string
         message: string
         time: string
+        isPremium?: boolean
+        paymentIntentId?: string
       }
     >({
-      query: ({ date, propertyId, name, email, phone, message, time }) => ({
+      query: (body) => ({
         url: 'api/schedule-tour',
         method: 'POST',
-        body: { date, propertyId, name, email, phone, message, time }, // Ensure all fields are included
+        body,
+      }),
+      invalidatesTags: ['Tours'],
+    }),
+
+    createPaymentIntent: build.mutation<
+      ICreatePaymentIntentResponse,
+      { propertyId: string }
+    >({
+      query: (body) => ({
+        url: 'api/create-payment-intent',
+        method: 'POST',
+        body,
       }),
     }),
 
@@ -31,8 +49,22 @@ export const scheduleTourApiSlice = createApi({
         url: `api/available-slots?date=${date}&propertyId=${propertyId}`,
         method: 'GET',
       }),
+      providesTags: ['Tours'],
+    }),
+
+    cancelTour: build.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `api/cancel/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Tours'],
     }),
   }),
 })
 
-export const { useAvailableSlotsQuery, useScheduleTourMutation } = scheduleTourApiSlice
+export const {
+  useAvailableSlotsQuery,
+  useScheduleTourMutation,
+  useCreatePaymentIntentMutation,
+  useCancelTourMutation,
+} = scheduleTourApiSlice

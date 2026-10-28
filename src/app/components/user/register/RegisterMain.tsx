@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { routes, USER_DATA } from '@/app/base/utils/constants'
+import { routes } from '@/app/base/utils/constants'
 import { useRegisterMutation } from '../../../lib/features/auth/register/registerApiSlice'
-import { setCookie } from 'cookies-next'
+import { useAuth } from '@/app/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Button } from '../../common/Button'
 import { Modal } from '../../common/Modal'
@@ -41,6 +41,7 @@ export const RegisterMain = (): React.ReactElement => {
 
   const router = useRouter()
   const [register, { isLoading }] = useRegisterMutation()
+  const { login: authenticateUser } = useAuth()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target
@@ -103,7 +104,7 @@ export const RegisterMain = (): React.ReactElement => {
 
       if (response) {
         setIsVerificationNeeded(true)
-        setCookie(USER_DATA, JSON.stringify(response), { maxAge: 60 * 60 * 24 })
+        authenticateUser(response, (response as any)?.token || (response as any)?.data?.token)
         toast.success(`User ${trimmedPayload.username} has successfully registered`)
         router.push(routes.emailSent)
       }
@@ -133,18 +134,18 @@ export const RegisterMain = (): React.ReactElement => {
       <Modal className="max-w-[690px] h-[90%]" isOpen={isOpen} setIsOpen={setIsOpen}>
         <div className="flex w-full overflow-hidden rounded-lg">
           {/* Left Section */}
-          <div className="w-1/2 bg-gradient-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
-            <Typography variant="h3" className="text-white mb-2">
+          <div className="w-1/2 bg-gradient-to-br from-primary/80 to-primary text-primary-foreground p-8 flex flex-col justify-center">
+            <Typography variant="h3" className="text-primary-foreground mb-2">
               Luxus Real Estate
             </Typography>
-            <Typography variant="extraSmallRegular" className="text-white">
+            <Typography variant="extraSmallRegular" className="text-primary-foreground">
               Step into Luxury Living – Sign Up with Luxus Real Estate Today!
             </Typography>
           </div>
 
           {/* Right Section */}
-          <div className="w-[70%] bg-white p-8">
-            <Typography variant="h1" className="text-blue-700 mb-6">
+          <div className="w-[70%] bg-card p-8">
+            <Typography variant="h1" className="text-primary mb-6">
               Sign up
             </Typography>
 
@@ -157,7 +158,7 @@ export const RegisterMain = (): React.ReactElement => {
                   onChange={handleChange}
                   disabled={isLoading}
                 />
-                {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+                {errors.username && <p className="text-destructive text-sm mt-1">{errors.username}</p>}
               </div>
 
               <div>
@@ -168,7 +169,7 @@ export const RegisterMain = (): React.ReactElement => {
                   onChange={handleChange}
                   disabled={isLoading}
                 />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
               </div>
               <div>
                 <TextField
@@ -178,7 +179,7 @@ export const RegisterMain = (): React.ReactElement => {
                   onChange={handleChange}
                   disabled={isLoading}
                 />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                {errors.email && <p className="text-destructive text-sm mt-1">{errors.phone}</p>}
               </div>
 
               <div>
@@ -190,11 +191,11 @@ export const RegisterMain = (): React.ReactElement => {
                   onChange={handleChange}
                   disabled={isLoading}
                 />
-                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
               </div>
 
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="role" className="block text-sm font-medium text-foreground">
                   Select Role
                 </label>
                 <select
@@ -203,17 +204,17 @@ export const RegisterMain = (): React.ReactElement => {
                   value={payload.role}
                   onChange={handleChange}
                   disabled={isLoading}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
                 >
                   <option value="buyer">Buyer</option>
                   <option value="seller">Seller</option>
                 </select>
-                {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
+                {errors.role && <p className="text-destructive text-sm mt-1">{errors.role}</p>}
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:opacity-90 text-white font-bold py-2 rounded-lg"
+                className="w-full"
                 disabled={isLoading}
               >
                 {isLoading ? 'Registering...' : 'Register'}

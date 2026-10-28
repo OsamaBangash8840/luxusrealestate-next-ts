@@ -1,102 +1,79 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { Typography } from '@/app/components/common'
+import { useEffect, useState } from 'react'
+import { useGetMessagesQuery, useSendMessageMutation } from '@/app/lib/features/chat/chatApi'
+import socket from '@/hooks/socket'
 import { Button } from '@/app/components/common/Button'
-import { TextField } from '@/app/components/form'
+import { Typography } from '@/app/components/common'
 
-export default function ChatPage() {
-  const socketRef = useRef<Socket | null>(null)
-  const [messages, setMessages] = useState<string[]>([])
-  const [message, setMessage] = useState('')
-  const [room, setRoom] = useState('')
-  const [roomName, setRoomName] = useState('')
-  const [socketID, setSocketId] = useState('')
+interface Props {
+  conversationId: string
+  userId: string
+  userToken: string
+  buyerId: string
+  sellerId: string
+  propertyId: string
+}
 
-  // Initialize and set up socket connection
+export default function ChatWindow({
+  conversationId,
+  userId,
+  userToken,
+  buyerId,
+  sellerId,
+  propertyId,
+}: Props) {
+  const { data: messages, refetch } = useGetMessagesQuery(conversationId)
+  const [sendMessage] = useSendMessageMutation()
+  const [input, setInput] = useState('')
+
   useEffect(() => {
-    socketRef.current = io('http://localhost:8000', {
-      withCredentials: true,
-    })
+    socket.auth = { token: userToken }
+    socket.connect()
 
-    socketRef.current.on('connect', () => {
-      setSocketId(socketRef.current?.id ?? '')
-      console.log('Connected:', socketRef.current?.id)
-    })
+    socket.emit('joinConversation', { conversationId, buyerId, sellerId, propertyId })
 
-    socketRef.current.on('receive-message', (data) => {
-      console.log('Received message:', data)
-
-      // If data is a string, use directly; if it's an object, extract the message
-      const content = typeof data === 'string' ? data : data.message
-      setMessages((prev) => [...prev, content])
-    })
-
-    socketRef.current.on('welcome', (msg) => {
-      console.log('Welcome message:', msg)
+    socket.on('newMessage', () => {
+      refetch() // Refresh messages on new socket message
     })
 
     return () => {
-      socketRef.current?.disconnect()
+      socket.disconnect()
     }
-  }, [])
+  }, [conversationId, userToken, refetch, buyerId, sellerId, propertyId])
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!message.trim()) return
+  const handleSend = async () => {
+    if (!input.trim()) return
 
-    socketRef.current?.emit('message', { message, room })
-    setMessage('')
-  }
+    await sendMessage({
+      conversationId,
+      content: input,
+      senderId: userId,
+    })
 
-  const handleJoinRoom = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!roomName.trim()) return
-
-    socketRef.current?.emit('join-room', roomName)
-    setRoomName('')
+    setInput('')
   }
 
   return (
-    <div className="p-4">
-      <Typography variant="h5">Socket ID: {socketID}</Typography>
-
-      <div className="overflow-y-auto border mb-4 p-4 space-y-4 max-h-[400px]">
-        {/* Join Room Form */}
-        <form onSubmit={handleJoinRoom} className="space-y-2">
-          <Typography variant="h5">Join Room</Typography>
-          <TextField
-            value={roomName}
-            onChange={(e) => setRoomName(e.target.value)}
-            placeholder="Room Name"
-          />
-          <Button type="submit" className="text-primary">
-            Join
-          </Button>
-        </form>
-
-        {/* Send Message Form */}
-        <form onSubmit={handleSendMessage} className="space-y-2">
-          <TextField
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Message"
-          />
-          <TextField value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Room" />
-          <Button type="submit" className="text-primary">
-            Send
-          </Button>
-        </form>
-
-        {/* Display Messages */}
-        <div className="space-y-2 mt-4">
-          {messages.map((m, i) => (
-            <Typography key={i} variant="h3">
-              {m}
-            </Typography>
-          ))}
-        </div>
+    <div className="flex flex-col border border-border p-4 rounded max-w-xl mx-auto h-[600px]">
+      <div className="flex-1 overflow-y-auto border-b border-border mb-4 p-2">
+        {messages?.map((msg: any) => (
+          <div key={msg._id} className="mb-2">
+            <Typography variant="extraSmallRegular" className="text-muted-foreground">{msg.senderId.username}</Typography>
+            <div className="bg-muted text-sm p-2 rounded inline-block">{msg.content}</div>
+          </div>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          className="border border-input flex-1 px-2 py-1 rounded bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message"
+        />
+        <Button onClick={handleSend}>
+          Send
+        </Button>
       </div>
     </div>
   )

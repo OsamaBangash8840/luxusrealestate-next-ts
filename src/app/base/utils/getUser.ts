@@ -6,11 +6,17 @@ export const getUser = () => {
 
   if (userData && typeof userData === 'string') {
     try {
-      return JSON.parse(userData) // Parse JSON if valid
-    } catch (error) {
-      console.warn('Error parsing user data from cookie:', error)
-      return null // Return null if the data isn't valid JSON
+      const parsed = JSON.parse(decodeURIComponent(userData))
+      return parsed?.user || parsed?.data?.user || parsed
+    } catch {
+      try {
+        const parsed = JSON.parse(userData)
+        return parsed?.user || parsed?.data?.user || parsed
+      } catch (error) {
+        console.warn('Error parsing user data from cookie:', error)
+        return null
+      }
     }
   }
-  return null // Return null if no cookie is found
+  return null
 }

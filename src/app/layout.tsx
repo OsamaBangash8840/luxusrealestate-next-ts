@@ -1,17 +1,20 @@
 'use client'
+
 import localFont from 'next/font/local'
-import './globals.css'
-import { StoreProvider } from './StoreProvider'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { Navbar } from './components/layout/website'
 import { usePathname } from 'next/navigation'
+import { ToastContainer } from 'react-toastify'
+
+import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
+import { StoreProvider } from './StoreProvider'
+import { Navbar, Footer } from './components/layout/website'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
   weight: '100 900',
 })
+
 const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
@@ -24,18 +27,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const pathname = usePathname()
-
-  // If it's an admin page, return only the children (no RootLayout applied)
-  if (pathname.startsWith('/admin')) {
-    return children
-  }
+  const isAdminRoute = pathname.startsWith('/admin')
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-body flex flex-col min-h-screen`}>
         <StoreProvider>
-          <Navbar />
-          {children}
+          {!isAdminRoute && <Navbar />}
+          <div className="flex-1">
+            {children}
+          </div>
+          {!isAdminRoute && <Footer />}
           <ToastContainer position="top-center" />
         </StoreProvider>
       </body>

@@ -14,7 +14,7 @@ interface ICard {
 
 export const HomeCards = ({card}:{card:ICard}): React.ReactElement => {
     return (
-        <div className="border border-gray-200 shadow-lg p-4 sm:mb-12 mb-6 rounded-lg">
+        <div className="border border-border shadow-lg p-4 sm:mb-12 mb-6 rounded-lg">
             <MImage
             src={card.image}
             w={500}

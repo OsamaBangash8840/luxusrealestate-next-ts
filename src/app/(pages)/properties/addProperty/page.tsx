@@ -1,8 +1,13 @@
-import { AddProperty } from "@/app/components/properties";
-import React from "react";
+'use client'
+
+import React from 'react'
+import { AddProperty } from '@/app/components/properties'
+import { AuthGuard } from '@/app/components/common'
 
 const Page = (): React.ReactElement => (
-    <AddProperty/>
+  <AuthGuard>
+    <AddProperty />
+  </AuthGuard>
 )
 
-export default Page;
+export default Page

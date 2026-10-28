@@ -1,7 +1,7 @@
 'use client';
 import { useNewsletterMutation } from "@/app/lib/features/contact/contactApiSplice";
 import React from "react";
-import { Typography } from "../common";
+import { Typography, Container } from "../common";
 import { toast } from "react-toastify";
 
 interface IPayload {
@@ -67,44 +67,49 @@ export const Newsletter = (): React.ReactElement => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-8 sm:mt-0 justify-center h-[290px] px-8 bg-primary">
-      <Typography variant="h2" className=" md:w-[50%] text-center sm:text-3xl font-semibold text-white mb-6">
-      Subscribe to our newsletter to get the latest updates on properties!
-      </Typography>
-      <Typography variant="bodyRegular" className="text-white md:w-[30%] leading-4 mb-5 text-center">
-      Stay informed with the newest property listings, trends, and updates delivered straight to your inbox.
-      </Typography>
-      <form
-        onSubmit={handleSubmit}
-        className="relative w-full max-w-md flex flex-col items-center"
-      >
-        <input
-          type="email"
-          name="email"
-          placeholder="example@example.com"
-          value={payload.email}
-          onChange={handleChange}
-          disabled={isLoading}
-          className="w-full py-3 pl-4 pr-[6rem] text-[12px] sm:text-[16px] text-primary bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-secondary"
-        />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`absolute bg-primary top-1/2 -translate-y-1/2 right-2 px-4 py-2 font-medium rounded-full transition ${
-            isLoading
-              ? "bg-gray-400 text-gray-700"
-              : "bg-secondary text-white hover:bg-blue-500 hover:text-secondary"
-          }`}
+    <section className="bg-card border-t border-border py-20">
+      <Container className="flex flex-col items-center justify-center text-center">
+        <span className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+          Newsletter
+        </span>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-4">
+          Stay Updated on New Luxury Homes
+        </h2>
+        <p className="text-sm sm:text-base text-body max-w-xl leading-relaxed mb-8">
+          Subscribe to receive notifications when new luxury properties and market insights become available. No spam, unsubscribe anytime.
+        </p>
+        <form
+          onSubmit={handleSubmit}
+          className="relative w-full max-w-md flex flex-col items-center"
         >
-          {isLoading ? "Submitting..." : "Subscribe"}
-        </button>
-      </form>
-      {errors.email && (
-        <p className="mt-4 text-red-400 text-sm">{errors.email}</p>
-      )}
-      {errors.apiError && (
-        <p className="mt-2 text-red-400 text-sm">{errors.apiError}</p>
-      )}
-    </div>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={payload.email}
+            onChange={handleChange}
+            disabled={isLoading}
+            className="w-full py-3.5 pl-5 pr-36 text-sm text-foreground bg-background border border-input rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-accent"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`absolute top-1/2 -translate-y-1/2 right-1.5 px-5 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm transition ${
+              isLoading
+                ? "bg-muted text-muted-foreground"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
+            }`}
+          >
+            {isLoading ? "Submitting..." : "Subscribe"}
+          </button>
+        </form>
+        {errors.email && (
+          <p className="mt-3 text-destructive text-xs font-medium">{errors.email}</p>
+        )}
+        {errors.apiError && (
+          <p className="mt-3 text-destructive text-xs font-medium">{errors.apiError}</p>
+        )}
+      </Container>
+    </section>
   );
 };

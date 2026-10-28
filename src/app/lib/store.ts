@@ -13,10 +13,16 @@ import { adminApiSlice } from './features/auth/admin/adminApiSlice'
 import { propertyStatusApiSlice } from './features/auth/admin/dashboard/propertyStatus/propertyStatusApiSlice'
 import { adminPropertiesApiSlice } from './features/auth/admin/dashboard/propertyStatus/AllProperties/adminPropertiesApiSlice'
 import { chatSlice } from './features/chat/chatSlice'
-import { chatApi } from './features/chat/chatApi' // Import chatApi
+import { chatApi } from './features/chat/chatApi'
 import { scheduleTourApiSlice } from './features/scheduleTours/scheduleToursApiSlice'
+import { favoritesApiSlice } from './features/favorites/favoritesApiSlice'
+import { savedSearchesApiSlice } from './features/savedSearches/savedSearchesApiSlice'
+import { reviewsApiSlice } from './features/reviews/reviewsApiSlice'
+import { categoryApiSlice } from './features/categories/categoryApiSlice'
+import { authSlice } from './features/auth/authSlice'
 
 const rootReducer = combineSlices(
+  authSlice,
   counterSlice,
   quotesApiSlice,
   authApiSlice,
@@ -30,15 +36,17 @@ const rootReducer = combineSlices(
   adminApiSlice,
   propertyStatusApiSlice,
   adminPropertiesApiSlice,
-  chatSlice, // ✅ Added correctly as a slice reducer
-  chatApi, // ✅ Added correctly as an API slice,
-  scheduleTourApiSlice
+  chatSlice,
+  chatApi,
+  scheduleTourApiSlice,
+  favoritesApiSlice,
+  savedSearchesApiSlice,
+  reviewsApiSlice,
+  categoryApiSlice
 )
 
-// ✅ Corrected `RootState`
 export type RootState = ReturnType<typeof rootReducer>
 
-// ✅ Fixed `makeStore` function
 export const makeStore = () =>
   configureStore({
     reducer: rootReducer,
@@ -57,12 +65,15 @@ export const makeStore = () =>
         adminApiSlice.middleware,
         propertyStatusApiSlice.middleware,
         adminPropertiesApiSlice.middleware,
-        chatApi.middleware, // ✅ Added chat API middleware
+        chatApi.middleware,
         scheduleTourApiSlice.middleware,
+        favoritesApiSlice.middleware,
+        savedSearchesApiSlice.middleware,
+        reviewsApiSlice.middleware,
+        categoryApiSlice.middleware,
       ]),
   })
 
-// ✅ Infer store types
 export type AppStore = ReturnType<typeof makeStore>
 export type AppDispatch = AppStore['dispatch']
 export type AppThunk<ThunkReturnType = void> = ThunkAction<

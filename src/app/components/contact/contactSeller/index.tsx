@@ -28,7 +28,7 @@ export const ContactSeller: React.FC<contactSellerProps> = ({ propertyId, isOpen
       >
         <div className="flex gap-3 px-5 py-4">
           <Button
-            className="mx-auto w-[260px] bg-white text-primary mb-4"
+            className="mx-auto w-[260px] bg-card text-primary mb-4"
             onClick={() => {
               console.log('Phone Number:', property?.seller?.phone)
               if (property?.seller?.phone) {
@@ -38,10 +38,10 @@ export const ContactSeller: React.FC<contactSellerProps> = ({ propertyId, isOpen
               }
             }}
           >
-            Call Now {property?.seller.phone}
+            Call Now {property?.seller?.phone || ''}
           </Button>
           <Button
-            className="mx-auto w-[260px] bg-white text-primary mb-4"
+            className="mx-auto w-[260px] bg-card text-primary mb-4"
             onClick={() => {
               if (property?.seller?.email) {
                 window.open(`mailto:${property.seller.email}`, '_self')
@@ -50,8 +50,8 @@ export const ContactSeller: React.FC<contactSellerProps> = ({ propertyId, isOpen
               }
             }}
           >
-            <a href={`mailto:${property?.seller.email}`} className="btn">
-              Send Mail {property?.seller.email}
+            <a href={`mailto:${property?.seller?.email || ''}`} className="btn">
+              Send Mail {property?.seller?.email || ''}
             </a>
           </Button>
         </div>

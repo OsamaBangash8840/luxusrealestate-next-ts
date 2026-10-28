@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { routes, USER_DATA } from '@/app/base/utils/constants'
+import { routes } from '@/app/base/utils/constants'
 import { useLoginMutation } from '../../../lib/features/auth/login/authApiSlice'
-import { getCookie, setCookie } from 'cookies-next'
+import { useAuth } from '@/app/hooks/useAuth'
 import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '../../common/Button'
 import { Modal } from '../../common/Modal'
@@ -11,7 +11,7 @@ import { TextField } from '../../form'
 import { Typography } from '../../common'
 import { toast } from 'react-toastify'
 import { GoogleLoginButton } from '../googleBtn'
-import axios from 'axios'
+import { axiosInstance } from '@/app/base/utils/axiosInstance'
 
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
 
@@ -28,16 +28,13 @@ export const LoginMain = (): React.ReactElement => {
 
   const router = useRouter()
   const [login, { isLoading }] = useLoginMutation()
-  const token = getCookie('token')
+  const { isAuthenticated, login: authenticateUser } = useAuth()
 
   useEffect(() => {
-    // if (pathname === '/') {
-    //   setIsOpen(false)
-    // }
-    if (token) {
+    if (isAuthenticated) {
       setIsOpen(false)
     }
-  }, [token, isOpen])
+  }, [isAuthenticated, isOpen])
 
   const clearErrors = (field?: keyof typeof payload) => {
     if (field) {
@@ -90,9 +87,7 @@ export const LoginMain = (): React.ReactElement => {
         password: payload.password,
       }).unwrap()
 
-      console.log('Login successful:', response)
-
-      setCookie(USER_DATA, JSON.stringify(response), { maxAge: 60 * 60 * 24 })
+      authenticateUser(response, (response as any)?.token || (response as any)?.data?.token)
 
       toast.success('Successfully logged in')
       setIsOpen(false)
@@ -120,10 +115,9 @@ export const LoginMain = (): React.ReactElement => {
 
   const handleResendVerification = async () => {
     try {
-      // Call API to resend verification email (replace with your API function)
-      const response = await axios.post('http://localhost:8000/api/resend-verification', {
+      const response = await axiosInstance.post('/api/resend-verification', {
         email: loginEmail,
-      }) // Placeholder
+      })
       if (response) {
         toast.success('Verification email sent. Please check your inbox.')
       }
@@ -144,27 +138,27 @@ export const LoginMain = (): React.ReactElement => {
       <Modal className="max-w-[630px]" isOpen={isOpen} setIsOpen={setIsOpen}>
         <div className="flex w-full overflow-hidden rounded-lg">
           {/* Left Section */}
-          <div className="w-1/2 bg-gradient-to-br from-blue-600 to-primary text-white p-8 flex flex-col justify-center">
-            <Typography variant="h3" className="text-white mb-2">
+          <div className="w-1/2 bg-gradient-to-br from-primary/80 to-primary text-primary-foreground p-8 flex flex-col justify-center">
+            <Typography variant="h3" className="text-primary-foreground mb-2">
               Luxus Real Estate
             </Typography>
-            <Typography variant="extraSmallRegular" className="text-white">
+            <Typography variant="extraSmallRegular" className="text-primary-foreground">
               Step into Luxury Living – Sign In with Luxus Real Estate Today!
             </Typography>
           </div>
 
           {/* Right Section */}
-          <div className="w-[70%] bg-white p-8">
+          <div className="w-[70%] bg-card p-8">
             {isVerificationNeeded ? (
               <div className="space-y-4">
-                <Typography variant="h1" className="text-blue-700 mb-6">
+                <Typography variant="h1" className="text-primary mb-6">
                   Email Verification Needed
                 </Typography>
                 <Typography variant="extraSmallRegular">
                   Please verify your email address to continue.
                 </Typography>
                 <Button
-                  className="bg-blue-600 hover:opacity-90 text-white font-bold py-2 rounded-lg"
+                  className="w-full"
                   onClick={handleResendVerification}
                 >
                   Resend Verification Email
@@ -172,7 +166,7 @@ export const LoginMain = (): React.ReactElement => {
               </div>
             ) : (
               <>
-                <Typography variant="h1" className="text-blue-700 mb-6">
+                <Typography variant="h1" className="text-primary mb-6">
                   Sign In
                 </Typography>
 
@@ -186,7 +180,7 @@ export const LoginMain = (): React.ReactElement => {
                       disabled={isLoading}
                       autoComplete="email"
                     />
-                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                    {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
                   </div>
 
                   <div>
@@ -200,13 +194,13 @@ export const LoginMain = (): React.ReactElement => {
                       autoComplete="current-password"
                     />
                     {errors.password && (
-                      <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.password}</p>
                     )}
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full bg-blue-600 hover:opacity-90 text-white font-bold py-2 rounded-lg"
+                    className="w-full"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Signing in...' : 'Sign In'}

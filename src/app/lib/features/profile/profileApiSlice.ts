@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axiosBaseQuery from '../axiosBaseQuery'
-import { IRegisterRequestBody, IRegisterUser, IRegisterUserResponse } from '../auth/register/types'
-import { IUserProfile } from './types'
+import { IUserProfile, IUpdateProfile } from './types'
 
 export const profileApiSlice = createApi({
   baseQuery: axiosBaseQuery(),
@@ -13,7 +12,7 @@ export const profileApiSlice = createApi({
         method: 'GET',
       }),
     }),
-    updateProfile: build.mutation<IUserProfile, void>({
+    updateProfile: build.mutation<IUserProfile, IUpdateProfile>({
       query: (body) => ({
         url: 'api/profile',
         method: 'PUT',

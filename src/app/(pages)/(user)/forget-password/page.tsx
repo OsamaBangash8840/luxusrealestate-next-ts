@@ -1,4 +1,4 @@
-import { ForgetPassword } from '@/app/components/admin/forgetPassword'
+import { ForgetPassword } from '@/app/components/user/forgetPassword'
 
 const ForgetPasswordPage = (): React.ReactElement => <ForgetPassword />
 

@@ -1,50 +1,65 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 
-interface ButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
-  className?: string;
-  href?: string; // Optional href for linking
-  type?: string;
-  disabled?: boolean;
+import {
+  Button as ShadcnButton,
+  type ButtonProps as ShadcnButtonProps,
+} from '@/app/components/shadcn/button'
+import { cn } from '@/app/base/utils/utils'
+
+type ButtonTone = 'brand' | 'success' | 'danger' | 'neutral'
+
+interface ButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>,
+    Omit<ShadcnButtonProps, 'asChild'> {
+  children: React.ReactNode
+  className?: string
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  loading?: boolean
+  tone?: ButtonTone
+}
+
+const toneClasses: Record<ButtonTone, string> = {
+  brand: '',
+  success: 'bg-success text-success-foreground hover:bg-success/90',
+  danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+  neutral: 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  onClick,
   children,
-  className = '',
-  disabled = false,
+  className,
   href,
+  type = 'button',
+  variant = 'default',
+  size = 'default',
+  loading = false,
+  tone = 'brand',
+  disabled = false,
+  ...props
 }) => {
-  const baseClasses =
-    'block flex-1 h-[32px] sm:h-[48px] px-6 py-4 mt-4 rounded-md font-bold flex justify-center items-center text-sm sm:text-base text-primary border-2 border-primary focus:outline-none hover:opacity-80 transition-colors';
+  const mergedClassName = cn('font-body', toneClasses[tone], className)
+  const isDisabled = disabled || loading
 
-  const disabledClasses = disabled
-    ? 'opacity-50 cursor-not-allowed' // Styling for disabled state
-    : '';
-
-  // Render as Link if href exists
   if (href) {
     return (
-      <Link
-        href={href}
-        onClick={onClick}
-        className={`${baseClasses} ${className} ${disabledClasses}`}
-      >
-        {children}
-      </Link>
-    );
+      <ShadcnButton asChild variant={variant} size={size} className={mergedClassName}>
+        <Link href={href}>{children}</Link>
+      </ShadcnButton>
+    )
   }
 
-  // Render as button if href is not provided
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled} // Ensure the button is properly disabled
-      className={`${baseClasses} ${className} ${disabledClasses}`}
+    <ShadcnButton
+      type={type}
+      variant={variant}
+      size={size}
+      className={mergedClassName}
+      disabled={isDisabled}
+      {...props}
     >
-      {children}
-    </button>
-  );
-};
+      {loading ? 'Please wait...' : children}
+    </ShadcnButton>
+  )
+}

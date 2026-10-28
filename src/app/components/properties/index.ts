@@ -1,2 +1,5 @@
-export * from './PropertiesList/index';
-export * from './AddProperty/index';
+export * from './PropertiesList/index'
+export * from './AddProperty/index'
+export * from './EditProperty/index'
+export * from './PropertyReviews/index'
+export * from './RelatedProperties/index'

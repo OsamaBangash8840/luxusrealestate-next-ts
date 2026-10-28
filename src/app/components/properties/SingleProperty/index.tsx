@@ -17,7 +17,7 @@ import { API_KEY } from '../PropertiesList'
 // Dynamically import the SinglePropertyMap
 const SinglePropertyMap = dynamic(() => import('../../common/Maps/SinglePropertyMap'), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-gray-100 animate-pulse" />,
+  loading: () => <div className="h-full w-full bg-muted animate-pulse" />,
 })
 
 interface SinglePropertyModalProps {
@@ -101,23 +101,23 @@ export const SingleProperty = ({
         <div>Error: {(error as any).message}</div>
       ) : property ? (
         <div>
-          <div className="grid sm:grid-cols-[60%_40%] gap-3 mt-4">
+          <div className="grid lg:grid-cols-[60%_40%] gap-4 mt-4">
             <div>
               <MImage
                 src={property.images?.[0]}
                 alt={property.title}
                 w={1000}
                 h={600}
-                className="sm:w-full w-[400px] h-[400px] object-cover rounded-md"
+                className="w-full h-[400px] object-cover rounded-lg"
               />
             </div>
-            <div>
-              {property.images?.slice(1).map((image, index) => (
+            <div className="hidden lg:grid grid-cols-2 gap-2">
+              {property.images?.slice(1, 5).map((image, index) => (
                 <MImage
                   key={index}
                   src={image}
                   alt={`${property.title} - Image ${index + 2}`}
-                  className="hidden sm:block w-full h-[195px] object-cover rounded-lg mb-2"
+                  className="w-full h-[195px] object-cover rounded-lg"
                   w={500}
                   h={300}
                 />
@@ -125,40 +125,50 @@ export const SingleProperty = ({
             </div>
           </div>
           {property.status === 'rejected' ? (
-            <h1 className="text-red-600 text-2xl font-bold text-center mx-auto">
+            <Typography variant="h2" className="text-destructive text-center mx-auto">
               Rejection Reason : {property.rejectionReason}
-            </h1>
+            </Typography>
           ) : null}
-          <div className="grid sm:grid-cols-[72%_28%] gap-2">
+          <div className="grid lg:grid-cols-[70%_30%] gap-8 mt-8">
             <div>
-              <div className="flex sm:justify-between justify-center gap-16">
-                <Typography variant="h1" className="mt-4">
-                  ${property.price}
-                </Typography>
-                <div className="flex gap-2 mt-4 sm:mr-8">
-                  <Typography variant="h2">{propertyBed.bedrooms}</Typography>
-                  <MdOutlineBedroomParent className="mt-1 text-[22px]" />
-                  <Typography className="font-thin text-2xl text-gray-500">|</Typography>
-                  <Typography variant="h2">{propertyBed.bathrooms}</Typography>
-                  <FaBath className="mt-1 text-[22px]" />
-                  <Typography className="font-thin text-2xl text-gray-500">|</Typography>
-                  <Typography variant="h2">{property.size}</Typography>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-border pb-6">
+                <div>
+                  <Typography variant="h1" className="font-bold">
+                    ${property.price?.toLocaleString()}
+                  </Typography>
+                  <p className="text-lg mt-1 text-muted-foreground">{address}</p>
+                </div>
+                <div className="flex items-center gap-4 sm:mr-4 bg-muted/50 p-4 rounded-xl">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-1"><MdOutlineBedroomParent className="text-xl" /><Typography variant="h3">{propertyBed.bedrooms}</Typography></div>
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Beds</span>
+                  </div>
+                  <div className="h-8 w-[1px] bg-border"></div>
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-1"><FaBath className="text-xl" /><Typography variant="h3">{propertyBed.bathrooms}</Typography></div>
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Baths</span>
+                  </div>
+                  <div className="h-8 w-[1px] bg-border"></div>
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-1"><Typography variant="h3">{property.size || property.lotSize}</Typography></div>
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Sqft</span>
+                  </div>
                 </div>
               </div>
-              <p className="text-[18px] mt-2 text-center sm:text-start">{address}</p>
-              <Typography variant="h2" className="mt-4">
+              
+              <Typography variant="h3" className="mt-8 mb-4 font-semibold">
                 What's special
               </Typography>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
                 {property.amenities?.map((amenity, index) => (
                   <div key={index} className="flex justify-center mt-2">
-                    <p className="bg-gray-200 px-5 text-[16px] font-semibold text-center rounded-lg py-2 w-full">
+                    <p className="bg-muted px-5 text-[16px] font-semibold text-center rounded-lg py-2 w-full">
                       {amenity}
                     </p>
                   </div>
                 ))}
                 <div className="flex justify-center mt-2">
-                  <p className="bg-gray-200 text-[16px] text-center font-semibold px-5 rounded-lg py-2 w-full">
+                  <p className="bg-muted text-[16px] text-center font-semibold px-5 rounded-lg py-2 w-full">
                     Lot Size: {property.lotSize}
                   </p>
                 </div>
@@ -177,15 +187,15 @@ export const SingleProperty = ({
                 </div>
               )}
             </div>
-            <div className="p-2 border border-gray-200 rounded-lg h-[450px] sticky top-[250px]">
+            <div className="p-2 border border-border rounded-lg h-[450px] sticky top-[250px]">
               {property.status === 'pending' ? (
                 pathname.startsWith('/admin/dashboard/properties') ? (
                   propertyId && <PropertyStatusButtons propertyId={propertyId} />
                 ) : (
                   <>
-                    <Button className="mx-auto w-[260px] bg-primary text-white">Get a Quote</Button>
+                    <Button className="mx-auto w-[260px]">Get a Quote</Button>
                     <Button
-                      className="mx-auto w-[260px] bg-primary text-white"
+                      className="mx-auto w-[260px]"
                       onClick={() => SetContactOpen(true)}
                     >
                       {' '}
@@ -193,7 +203,7 @@ export const SingleProperty = ({
                     </Button>
 
                     <Button
-                      className="mx-auto w-[260px] bg-blue-500 text-white"
+                      className="mx-auto w-[260px]"
                       onClick={() => setScheduleTourOpen(true)}
                     >
                       Schedule a Tour
@@ -202,15 +212,15 @@ export const SingleProperty = ({
                 )
               ) : (
                 <>
-                  <Button className="mx-auto w-[260px] bg-primary text-white">Get a Quote</Button>
+                  <Button className="mx-auto w-[260px]">Get a Quote</Button>
                   <Button
-                    className="mx-auto w-[260px] bg-primary text-white"
+                    className="mx-auto w-[260px]"
                     onClick={() => SetContactOpen(true)}
                   >
                     Contact Seller
                   </Button>
                   <Button
-                    className="mx-auto w-[260px] bg-blue-500 text-white"
+                    className="mx-auto w-[260px]"
                     onClick={() => setScheduleTourOpen(true)}
                   >
                     Schedule a Tour

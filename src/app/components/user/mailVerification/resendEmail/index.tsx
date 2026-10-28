@@ -1,9 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { Eye, EyeOff, Loader2, Mail, Lock, User, CheckCircle2, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
+import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/app/components/common/Button'
+import { TextField } from '@/app/components/form'
+import { Typography } from '@/app/components/common'
 import { useResendVerificationMutation } from '@/app/lib/features/auth/verifyEmail/verifyEmailApiSlice'
 
 export const ResendVerification = () => {
@@ -28,30 +28,31 @@ export const ResendVerification = () => {
   }
 
   return (
-    <div className="min-h-[400px] bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Resend Verification Email</h2>
+    <div className="bg-background min-h-[90%] flex items-center justify-center p-4">
+      <div className="max-w-[480px] w-full border border-border p-8 mt-10">
+        <Typography variant="h2" className="text-center mb-6">Resend Verification Email</Typography>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground">
               Email address
             </label>
             <div className="mt-1 relative">
-              <input
+              <TextField
                 id="email"
                 type="email"
                 required
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                className="block w-full"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
               />
             </div>
           </div>
 
           {status !== 'idle' && (
-            <div className={`rounded-md p-4 ${status === 'success' ? 'bg-green-50' : 'bg-red-50'}`}>
-              <p className={`text-sm ${status === 'success' ? 'text-green-700' : 'text-red-700'}`}>
+            <div className={`rounded-md p-4 ${status === 'success' ? 'bg-success/10' : 'bg-destructive/10'}`}>
+              <p className={`text-sm ${status === 'success' ? 'text-success' : 'text-destructive'}`}>
                 {message}
               </p>
             </div>
@@ -60,7 +61,7 @@ export const ResendVerification = () => {
           <Button
             type="submit"
             disabled={status === 'loading'}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full"
           >
             {status === 'loading' ? (
               <Loader2 className="w-5 h-5 animate-spin" />

@@ -1,11 +1,10 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+
+import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import Sidebar from '@/app/components/admin/dashboard/sidebar'
 import Header from '@/app/components/admin/dashboard/header'
-import { StoreProvider } from '@/app/StoreProvider'
-import { getCookie } from 'cookies-next'
-import { routes } from '@/app/base/utils/constants'
+import Sidebar from '@/app/components/admin/dashboard/sidebar'
+import { AuthGuard } from '@/app/components/common'
 
 export default function DashboardLayout({
   children,
@@ -13,36 +12,14 @@ export default function DashboardLayout({
   children: React.ReactNode
 }>) {
   const router = useRouter()
-  const token = getCookie('token')
-
-  // Redirect to login if token is missing
-  useEffect(() => {
-    if (!token) {
-      router.push(routes.login)
-    }
-  }, [token, router])
+  const pathname = usePathname()
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  // const router = useRouter()
-  const pathname = usePathname()
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
-
-  const handleLinkClick = (path: string) => {
-    setIsDropdownOpen(false)
-    setIsSidebarOpen(false)
-    router.push(path)
-  }
-  const isActive = (path: string) => pathname === path
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -68,48 +45,48 @@ export default function DashboardLayout({
     }
   }, [isSidebarOpen, isDropdownOpen])
 
+  const isActive = (path: string) => pathname === path
+
+  const handleLinkClick = (path: string) => {
+    setIsDropdownOpen(false)
+    setIsSidebarOpen(false)
+    router.push(path)
+  }
+
   return (
-    <html lang="en">
-      <body>
-        <StoreProvider>
+    <AuthGuard requiredRole="admin">
+      <div className="relative flex h-screen items-start justify-start overflow-hidden bg-background">
+        {isSidebarOpen && (
           <div
-            className="relative overflow-x-hidden flex items-start justify-start h-screen bg-[#FBFBFB] "
+            className="fixed inset-0 z-30 bg-foreground/50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        <Sidebar
+          isActive={isActive}
+          handleLinkClick={handleLinkClick}
+          sidebarRef={sidebarRef}
+          isSidebarOpen={isSidebarOpen}
+        />
+
+        <div className="flex h-screen flex-1 flex-col overflow-hidden">
+          <Header
+            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            dropdownRef={dropdownRef}
+            toggleDropdown={() => setIsDropdownOpen(!isDropdownOpen)}
+            isDropdownOpen={isDropdownOpen}
+            handleLinkClick={handleLinkClick}
+          />
+
+          <main
+            className="flex-1 overflow-y-auto bg-background p-6"
             style={{ scrollbarWidth: 'none' }}
           >
-            {isSidebarOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-                onClick={() => setIsSidebarOpen(false)}
-              ></div>
-            )}
-
-            <Sidebar
-              isActive={isActive}
-              handleLinkClick={handleLinkClick}
-              sidebarRef={sidebarRef}
-              isSidebarOpen={isSidebarOpen}
-            />
-
-            {/* Content */}
-            <div className="flex-1 w-[70%] flex flex-col">
-              <Header
-                toggleSidebar={toggleSidebar}
-                dropdownRef={dropdownRef}
-                toggleDropdown={toggleDropdown}
-                isDropdownOpen={isDropdownOpen}
-                handleLinkClick={handleLinkClick}
-              />
-
-              <main
-                className="p-4  md:max-h-[85vh] text-nowrap overflow-y-auto  bg-gray-50  flex-1 overflow-auto"
-                style={{ scrollbarWidth: 'none' }}
-              >
-                {children}
-              </main>
-            </div>
-          </div>
-        </StoreProvider>
-      </body>
-    </html>
+            {children}
+          </main>
+        </div>
+      </div>
+    </AuthGuard>
   )
 }

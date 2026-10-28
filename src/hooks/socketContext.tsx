@@ -22,7 +22,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [])
 
-  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+  return (
+    <SocketContext.Provider value={socket}>
+      {children}
+    </SocketContext.Provider>
+  )
 }
 
 export const useSocket = () => useContext(SocketContext)

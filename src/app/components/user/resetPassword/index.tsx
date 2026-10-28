@@ -40,21 +40,21 @@ export const ResetPassword = (): React.ReactElement => {
   }
 
   return (
-    <div className="bg-gray-50">
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-[24px] semi-bold text-center text-blue-700 mb-4">
-          Set a New Password for Your Account
-        </h2>
-        <Typography variant="bodyRegular" className="text-center mb-6">
+    <div className="bg-background min-h-[90%] flex items-center justify-center p-4">
+      <div className="max-w-[480px] w-full mt-10 p-8 border border-border">
+        <Typography variant="h2" className="text-center font-bold tracking-tight mb-4 mt-4">
+          Set a New Password
+        </Typography>
+        <Typography variant="bodyRegular" className="text-center text-muted-foreground mb-8">
           Create a new password to secure your account.
         </Typography>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <div className="mt-1">
+            <div className="relative">
               <TextField
                 type="password"
                 required
-                className="block w-full shadow-sm"
+                className="block w-full"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter new password"
@@ -62,11 +62,11 @@ export const ResetPassword = (): React.ReactElement => {
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <div className="border border-destructive/20 bg-destructive/5 p-4"><p className="text-destructive text-sm text-center">{error}</p></div>}
 
           <Button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="w-full h-12 rounded-none mt-4"
           >
             Reset Password
           </Button>

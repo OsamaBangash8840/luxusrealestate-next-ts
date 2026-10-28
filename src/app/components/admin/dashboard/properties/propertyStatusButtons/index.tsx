@@ -46,13 +46,15 @@ export const PropertyStatusButtons: React.FC<PropertyStatusProps> = ({
     <>
       <div className="">
         <Button
-          className=" mx-auto w-[260px] border-green-500 bg-green-500 text-white"
+          className="mx-auto w-[260px]"
+          tone="success"
           onClick={handleApprove}
         >
           Approve
         </Button>
         <Button
-          className="mx-auto w-[260px] border-red-500 bg-red-500 text-white"
+          className="mx-auto w-[260px]"
+          tone="danger"
           onClick={() => setShowRejectionInput(true)}
         >
           Reject
@@ -67,7 +69,7 @@ export const PropertyStatusButtons: React.FC<PropertyStatusProps> = ({
             value={rejectionReason}
             onChange={(e) => setRejectionReason(e.target.value)}
           />
-          <Button className="mt-2 bg-red-600 text-white w-full" onClick={handleReject}>
+          <Button className="mt-2 w-full" tone="danger" onClick={handleReject}>
             Submit Rejection
           </Button>
         </div>

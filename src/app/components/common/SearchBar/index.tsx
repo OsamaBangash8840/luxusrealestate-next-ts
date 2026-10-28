@@ -3,6 +3,9 @@ import { TextField } from '@/app/components/form'
 import React, { useState } from 'react'
 import { PropertyCard } from '../PropertyCard'
 import { SingleProperty } from '../../properties/SingleProperty'
+import { Button } from '@/app/components/common/Button'
+import { Typography, Container } from '@/app/components/common'
+import { baseURL } from '@/app/base/utils/axiosInstance'
 
 interface FilterOptions {
   minPrice?: number
@@ -57,7 +60,7 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
         ),
       })
 
-      const response = await fetch(`http://localhost:8000/api/properties/search?${queryParams}`)
+      const response = await fetch(`${baseURL}api/properties/search?${queryParams}`)
       const data = await response.json()
 
       if (data.success) {
@@ -87,7 +90,8 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
   }
 
   return (
-    <div className="w-full px-5 sm:px-20  mx-auto p-6 bg-white rounded-lg">
+    <Container className="py-6 mt-4">
+      <div className="w-full mx-auto p-6 bg-card rounded-lg border border-border">
       <div className="space-y-4">
         {/* Search Bar */}
         <div className="flex gap-2">
@@ -98,12 +102,11 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-1"
           />
-          <button
+          <Button
             onClick={handleSearch}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
             🔍 Search
-          </button>
+          </Button>
         </div>
 
         {/* Filters */}
@@ -111,7 +114,7 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
           {/* Property Type Filter */}
           <select
             onChange={(e) => handleFilterChange('category', e.target.value)}
-            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">Property Type</option>
             {categories.map((type) => (
@@ -124,7 +127,7 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
           {/* Location Filter */}
           <select
             onChange={(e) => handleFilterChange('location', e.target.value)}
-            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             <option value="">Location</option>
             {locations.map((location) => (
@@ -140,23 +143,23 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
               type="number"
               placeholder="Min Price"
               onChange={(e) => handleFilterChange('minPrice', Number(e.target.value))}
-              className="p-2 border rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 border border-input rounded-lg w-1/2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <input
               type="number"
               placeholder="Max Price"
               onChange={(e) => handleFilterChange('maxPrice', Number(e.target.value))}
-              className="p-2 border rounded-lg w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-2 border border-input rounded-lg w-1/2 bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
 
         {/* Search Results */}
         <div className="mt-6">
-          {loading && <p className="text-blue-500">Loading properties...</p>}
-          {error && <p className="text-red-500">{error}</p>}
+          {loading && <Typography variant="bodyRegular" className="text-primary">Loading properties...</Typography>}
+          {error && <Typography variant="bodyRegular" className="text-destructive">{error}</Typography>}
           {!loading && !error && properties.length > 0 && (
-            <div className="grid grid-cols sm:grid-cols-[200px_200px] md:grid-cols-[300px_300px_300px_300px] 2xl:grid-cols-4 2xl:px-48 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {properties.map((property) => (
                 <div key={property._id} className="">
                   {property.status === 'approved' ? (
@@ -183,8 +186,9 @@ const PropertySearch: React.FC<PropertySearchProps> = ({
             </div>
           )}
         </div>
+        </div>
       </div>
-    </div>
+    </Container>
   )
 }
 

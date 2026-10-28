@@ -13,20 +13,20 @@ const Slider = dynamic(() => import("react-slick"), { ssr: false });
 // Custom Left Arrow
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <button
-    className="absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-gray-700"
+    className="absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-background border border-border text-foreground w-12 h-12 flex items-center justify-center transition-colors hover:bg-muted"
     onClick={onClick}
   >
-    &#8592;
+    {"\\u2190"}
   </button>
 );
 
 // Custom Right Arrow
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <button
-    className="absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-gray-700"
+    className="absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-background border border-border text-foreground w-12 h-12 flex items-center justify-center transition-colors hover:bg-muted"
     onClick={onClick}
   >
-    &#8594;
+    {"\\u2192"}
   </button>
 );
 
@@ -39,7 +39,7 @@ export const HeroSlider = () => {
   };
 
   return (
-    <div className="homepage-carousel relative">
+    <div className="homepage-carousel relative border-b border-border">
       <Slider {...carouselSettings}>
         {slides.map((slide) => (
           <div key={slide.id} className="slide relative">
@@ -49,11 +49,13 @@ export const HeroSlider = () => {
               alt={slide.title}
               w={1000}
               h={1000}
-              className="w-full h-full object-cover"  // Set width and height to full container size
+              className="w-full h-full object-cover grayscale-[20%]"  // Set width and height to full container size
             />
-            <div className="overlay text-left absolute inset-0 flex flex-col items-start justify-center bg-black bg-opacity-60 text-white">
-              <Typography variant="h1"  className="mb-2 text-primary">{slide.title}</Typography>
-              <Typography variant="h3" className="mx-[170px]">{slide.description}</Typography>
+            <div className="overlay text-left absolute inset-0 flex flex-col items-start justify-center bg-foreground/40">
+              <div className="bg-background border border-border p-8 max-w-2xl ml-[10%] shadow-none">
+                <Typography variant="h1"  className="mb-4 text-foreground tracking-tight">{slide.title}</Typography>
+                <Typography variant="h3" className="text-muted-foreground font-light">{slide.description}</Typography>
+              </div>
             </div>
           </div>
         ))}

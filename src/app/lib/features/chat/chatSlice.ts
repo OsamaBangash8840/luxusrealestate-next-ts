@@ -27,7 +27,10 @@ export const chatSlice = createSlice({
     addMessage: (state, action: PayloadAction<Message>) => {
       state.messages.push(action.payload)
     },
-    setTyping: (state, action: PayloadAction<{ conversationId: string; userId: string }>) => {
+    setTyping: (
+      state,
+      action: PayloadAction<{ conversationId: string; userId: string }>
+    ) => {
       const { conversationId, userId } = action.payload
       if (!state.typingUsers[conversationId]) {
         state.typingUsers[conversationId] = []
@@ -36,9 +39,13 @@ export const chatSlice = createSlice({
         state.typingUsers[conversationId].push(userId)
       }
     },
-    removeTyping: (state, action: PayloadAction<{ conversationId: string; userId: string }>) => {
+    removeTyping: (
+      state,
+      action: PayloadAction<{ conversationId: string; userId: string }>
+    ) => {
       const { conversationId, userId } = action.payload
-      state.typingUsers[conversationId] = state.typingUsers[conversationId].filter(
+      const targetTyping = state.typingUsers[conversationId]
+      state.typingUsers[conversationId] = targetTyping.filter(
         (id: string) => id !== userId
       )
     },

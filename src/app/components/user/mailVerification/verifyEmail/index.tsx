@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
+import { Typography } from '@/app/components/common'
+import { Button } from '@/app/components/common/Button'
 import { useVerifyEmailMutation } from '@/app/lib/features/auth/verifyEmail/verifyEmailApiSlice'
 import { toast } from 'react-toastify'
 
@@ -40,45 +41,45 @@ export const VerifyEmail = () => {
   }, [token, verifyEmail])
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
+    <div className="bg-background min-h-[90%] flex items-center justify-center p-4">
+      <div className="max-w-[480px] w-full border border-border p-8 text-center mt-10">
         {status === 'verifying' && (
           <div>
-            <Loader2 className="mx-auto h-12 w-12 text-blue-500 animate-spin" />
-            <h2 className="mt-4 text-xl font-semibold">Verifying your email...</h2>
-            <p className="mt-2 text-gray-600">This will only take a moment.</p>
+            <Loader2 className="mx-auto h-12 w-12 text-primary animate-spin" />
+            <Typography variant="h3" className="mt-4">Verifying your email...</Typography>
+            <Typography variant="bodyRegular" className="mt-2 text-muted-foreground">This will only take a moment.</Typography>
           </div>
         )}
 
         {status === 'success' && (
           <div>
-            <CheckCircle2 className="mx-auto h-12 w-12 text-green-500" />
-            <h2 className="mt-4 text-xl font-semibold text-green-900">
+            <CheckCircle2 className="mx-auto h-12 w-12 text-success" />
+            <Typography variant="h3" className="mt-4 text-success">
               Email verified successfully!
-            </h2>
-            <p className="mt-2 text-gray-600">
+            </Typography>
+            <Typography variant="bodyRegular" className="mt-2 text-muted-foreground">
               Your email has been verified. You can now log in to your account.
-            </p>
-            <Link
+            </Typography>
+            <Button
               href="/login"
-              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="mt-6"
             >
               Continue to Login
-            </Link>
+            </Button>
           </div>
         )}
 
         {status === 'error' && (
           <div>
-            <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
-            <h2 className="mt-4 text-xl font-semibold text-red-900">Verification failed</h2>
-            <p className="mt-2 text-red-600">{error}</p>
-            <Link
+            <AlertCircle className="mx-auto h-12 w-12 text-destructive" />
+            <Typography variant="h3" className="mt-4 text-destructive">Verification failed</Typography>
+            <Typography variant="bodyRegular" className="mt-2 text-destructive">{error}</Typography>
+            <Button
               href="/resend-email"
-              className="mt-6 inline-block px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="mt-6"
             >
               Resend Verification Email
-            </Link>
+            </Button>
           </div>
         )}
       </div>
