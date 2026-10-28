@@ -1,10 +1,8 @@
 'use client'
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { AlertTriangle, Home, RefreshCw, ShieldAlert, ArrowLeft } from 'lucide-react'
-import { Typography, Container } from '@/app/components/common'
+import { Typography, Container, Button } from '@/app/components/common'
 
 export interface ErrorHandlerProps {
   error?: Error & { digest?: string }
@@ -25,7 +23,6 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
   showResetButton = true,
   autoRedirectSeconds,
 }) => {
-  const router = useRouter()
   const [countdown, setCountdown] = React.useState<number | null>(
     autoRedirectSeconds && autoRedirectSeconds > 0 ? autoRedirectSeconds : null
   )
@@ -33,18 +30,16 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
   React.useEffect(() => {
     if (countdown === null) return
     if (countdown <= 0) {
-      router.push('/')
+      if (typeof window !== 'undefined') {
+        window.location.assign('/')
+      }
       return
     }
     const timer = setTimeout(() => {
       setCountdown((prev) => (prev !== null ? prev - 1 : null))
     }, 1000)
     return () => clearTimeout(timer)
-  }, [countdown, router])
-
-  const handleBackToHome = () => {
-    router.push('/')
-  }
+  }, [countdown])
 
   return (
     <div className="flex min-h-[65vh] items-center justify-center bg-background px-4 py-16">
@@ -53,6 +48,7 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/10 px-4 py-1.5 shadow-sm">
           <ShieldAlert className="h-4 w-4 text-destructive" />
           <Typography
+            as="span"
             variant="extraSmallBold"
             className="font-mono uppercase tracking-widest text-destructive"
           >
@@ -62,6 +58,7 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
 
         {/* Headline using Typography component */}
         <Typography
+          as="h1"
           variant="h1"
           className="mb-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl"
         >
@@ -70,6 +67,7 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
 
         {/* Description using Typography */}
         <Typography
+          as="p"
           variant="bodyRegular"
           className="mx-auto mb-8 max-w-xl text-base text-body leading-relaxed sm:text-lg"
         >
@@ -82,10 +80,18 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
             <div className="flex items-start gap-2.5">
               <AlertTriangle className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
               <div className="space-y-1 overflow-hidden">
-                <Typography variant="extraSmallBold" className="font-mono uppercase tracking-wider text-accent">
+                <Typography
+                  as="span"
+                  variant="extraSmallBold"
+                  className="font-mono uppercase tracking-wider text-accent"
+                >
                   Diagnostics
                 </Typography>
-                <Typography variant="smallRegular" className="font-mono text-xs text-muted-foreground break-words line-clamp-3">
+                <Typography
+                  as="p"
+                  variant="smallRegular"
+                  className="font-mono text-xs text-muted-foreground break-words line-clamp-3"
+                >
                   {error.message}
                 </Typography>
               </div>
@@ -95,42 +101,50 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = ({
 
         {/* Countdown notice if enabled */}
         {countdown !== null && countdown > 0 && (
-          <Typography variant="smallRegular" className="mb-6 text-xs text-muted-foreground font-mono">
+          <Typography
+            as="p"
+            variant="smallRegular"
+            className="mb-6 text-xs text-muted-foreground font-mono"
+          >
             Redirecting to home in {countdown}s...
           </Typography>
         )}
 
-        {/* Action Controls */}
+        {/* Action Controls using shared Button & Typography */}
         <div className="flex flex-wrap items-center justify-center gap-4">
           {showHomeButton && (
-            <button
-              type="button"
-              onClick={handleBackToHome}
-              className="inline-flex items-center gap-2 rounded-sm bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring"
-            >
+            <Button href="/" variant="default" className="gap-2 px-6 py-3">
               <Home className="h-4 w-4" />
-              <span>Back to Home</span>
-            </button>
+              <Typography as="span" variant="smallBold" className="text-primary-foreground">
+                Back to Home
+              </Typography>
+            </Button>
           )}
 
           {showResetButton && reset && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => reset()}
-              className="inline-flex items-center gap-2 rounded-sm border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+              className="gap-2 px-6 py-3 bg-card text-foreground border-border hover:bg-muted"
             >
               <RefreshCw className="h-4 w-4 text-accent" />
-              <span>Retry Operation</span>
-            </button>
+              <Typography as="span" variant="smallBold" className="text-foreground">
+                Retry Operation
+              </Typography>
+            </Button>
           )}
 
-          <Link
+          <Button
             href="/properties"
-            className="inline-flex items-center gap-2 rounded-sm border border-transparent px-4 py-3 text-sm font-semibold text-body hover:text-foreground transition"
+            variant="ghost"
+            className="gap-2 px-4 py-3 text-body hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Browse Active Estates</span>
-          </Link>
+            <Typography as="span" variant="smallBold">
+              Browse Active Estates
+            </Typography>
+          </Button>
         </div>
       </Container>
     </div>

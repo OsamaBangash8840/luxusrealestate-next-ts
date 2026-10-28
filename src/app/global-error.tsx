@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { ErrorHandler } from '@/app/components/common/ErrorHandler'
+import { ErrorHandler } from '@/app/components/common'
 
 export default function GlobalError({
   error,

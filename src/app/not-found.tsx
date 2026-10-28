@@ -2,13 +2,10 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { Home, Compass, ArrowLeft, ShieldAlert } from 'lucide-react'
-import { Container, Typography } from '@/app/components/common'
+import { Home, Compass, ShieldAlert } from 'lucide-react'
+import { Button, Container, Typography } from '@/app/components/common'
 
 export default function NotFound() {
-  const router = useRouter()
-
   return (
     <div className="flex min-h-[75vh] items-center justify-center bg-background px-4 py-20">
       <Container className="max-w-2xl text-center">
@@ -44,26 +41,23 @@ export default function NotFound() {
 
         {/* Action Controls */}
         <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-          <button
-            type="button"
-            onClick={() => router.push('/')}
-            className="inline-flex items-center gap-2 rounded-sm bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring"
-          >
+          <Button href="/" variant="default" className="gap-2 px-7 py-3.5">
             <Home className="h-4 w-4" />
             <Typography as="span" variant="smallBold" className="text-primary-foreground">
               Back to Home
             </Typography>
-          </button>
+          </Button>
 
-          <Link
+          <Button
             href="/properties"
-            className="inline-flex items-center gap-2 rounded-sm border border-border bg-card px-7 py-3.5 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+            variant="outline"
+            className="gap-2 border-border bg-card px-7 py-3.5 text-foreground hover:bg-muted"
           >
             <Compass className="h-4 w-4 text-accent" />
             <Typography as="span" variant="smallBold" className="text-foreground">
               Browse All Properties
             </Typography>
-          </Link>
+          </Button>
         </div>
 
         {/* Quick Links Directory */}
@@ -80,25 +74,33 @@ export default function NotFound() {
               href="/properties?category=villa"
               className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
             >
-              <Typography as="span" variant="extraSmallMedium">Modernist Villas</Typography>
+              <Typography as="span" variant="extraSmallMedium">
+                Modernist Villas
+              </Typography>
             </Link>
             <Link
-              href="/properties?category=penthouse"
+              href="/properties?category=apartment"
               className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
             >
-              <Typography as="span" variant="extraSmallMedium">Sky Penthouses</Typography>
+              <Typography as="span" variant="extraSmallMedium">
+                Sky Penthouses
+              </Typography>
             </Link>
             <Link
-              href="/properties?category=waterfront"
+              href="/properties?category=house"
               className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
             >
-              <Typography as="span" variant="extraSmallMedium">Waterfront Havens</Typography>
+              <Typography as="span" variant="extraSmallMedium">
+                Waterfront Havens
+              </Typography>
             </Link>
             <Link
               href="/contact"
               className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
             >
-              <Typography as="span" variant="extraSmallMedium">Private Client Desk</Typography>
+              <Typography as="span" variant="extraSmallMedium">
+                Private Client Desk
+              </Typography>
             </Link>
           </div>
         </div>

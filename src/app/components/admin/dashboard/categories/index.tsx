@@ -1,24 +1,17 @@
 'use client'
 
 import React, { useState } from 'react'
-import {
-  Layers,
-  Plus,
-  Search,
-  Sparkles,
-  Tag,
-  ImageIcon,
-  CheckCircle2,
-  AlertCircle,
-  X,
-} from 'lucide-react'
+import { Layers, Plus, Search, Tag, X } from 'lucide-react'
 import {
   useGetAllCategoriesQuery,
   useAddCategoryMutation,
 } from '@/app/lib/features/categories/categoryApiSlice'
-import { Typography, Skeleton } from '@/app/components/common'
+import { Button, Typography, Skeleton } from '@/app/components/common'
+import { TextField } from '@/app/components/form'
 import { toast } from 'react-toastify'
 import Image from 'next/image'
+
+const VALID_CATEGORY_NAMES = ['villa', 'apartment', 'house', 'condo', 'office', 'shop'] as const
 
 export const CategoryManagement: React.FC = () => {
   const { data: categories = [], isLoading, refetch } = useGetAllCategoriesQuery()
@@ -26,7 +19,7 @@ export const CategoryManagement: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [newCategoryName, setNewCategoryName] = useState('')
+  const [newCategoryName, setNewCategoryName] = useState<string>('villa')
   const [newCategoryImage, setNewCategoryImage] = useState('')
 
   const filteredCategories = categories.filter((cat) =>
@@ -42,13 +35,15 @@ export const CategoryManagement: React.FC = () => {
 
     try {
       const payload: { name: string; images?: string[] } = {
-        name: newCategoryName.trim(),
-        images: newCategoryImage.trim() ? [newCategoryImage.trim()] : ['/images/villa-modernist.jpg'],
+        name: newCategoryName.trim().toLowerCase(),
+        images: newCategoryImage.trim()
+          ? [newCategoryImage.trim()]
+          : ['/images/villa-modernist.jpg'],
       }
 
       await addCategory(payload).unwrap()
       toast.success(`Category "${newCategoryName}" registered successfully`)
-      setNewCategoryName('')
+      setNewCategoryName('villa')
       setNewCategoryImage('')
       setIsModalOpen(false)
       refetch()
@@ -80,26 +75,28 @@ export const CategoryManagement: React.FC = () => {
           </Typography>
         </div>
 
-        <button
+        <Button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-sm bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider"
         >
           <Plus className="h-4 w-4" />
-          <span>Add Category</span>
-        </button>
+          <Typography as="span" variant="extraSmallBold" className="text-primary-foreground">
+            Add Category
+          </Typography>
+        </Button>
       </div>
 
       {/* Search Bar */}
       <div className="flex items-center justify-between gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-body" />
-          <input
+          <TextField
             type="text"
             placeholder="Search categories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2 rounded-sm bg-card border border-border text-foreground text-xs focus:outline-none focus:border-accent"
+            icon={<Search className="h-4 w-4" />}
+            inputClass="!h-10 text-xs"
           />
         </div>
         <Typography as="span" variant="extraSmallMedium" className="text-xs text-body font-mono">
@@ -147,7 +144,9 @@ export const CategoryManagement: React.FC = () => {
                   <div className="absolute top-3 right-3">
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[2px] bg-background/90 backdrop-blur-sm border border-border text-[10px] font-mono text-foreground font-semibold">
                       <Tag className="h-2.5 w-2.5 text-accent" />
-                      Active
+                      <Typography as="span" variant="extraSmallBold" className="text-[10px]">
+                        Active
+                      </Typography>
                     </span>
                   </div>
                   <div className="absolute bottom-3 left-3 right-3">
@@ -163,12 +162,20 @@ export const CategoryManagement: React.FC = () => {
 
                 <div className="p-4 space-y-2">
                   <div className="flex items-center justify-between text-[11px] text-body font-mono">
-                    <span>Category ID</span>
-                    <span className="text-foreground">{category._id ? category._id.slice(-8) : 'Static'}</span>
+                    <Typography as="span" variant="extraSmallRegular" className="text-[11px] text-body">
+                      Category ID
+                    </Typography>
+                    <Typography as="span" variant="extraSmallMedium" className="text-[11px] text-foreground">
+                      {category._id ? category._id.slice(-8) : 'Static'}
+                    </Typography>
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-body font-mono">
-                    <span>Filter</span>
-                    <span className="text-accent lowercase">category={encodeURIComponent(category.name)}</span>
+                    <Typography as="span" variant="extraSmallRegular" className="text-[11px] text-body">
+                      Filter
+                    </Typography>
+                    <Typography as="span" variant="extraSmallMedium" className="text-[11px] text-accent lowercase">
+                      category={encodeURIComponent(category.name)}
+                    </Typography>
                   </div>
                 </div>
               </div>
@@ -188,61 +195,70 @@ export const CategoryManagement: React.FC = () => {
                   New Property Category
                 </Typography>
               </div>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsModalOpen(false)}
-                className="text-body hover:text-foreground p-1"
+                className="text-body hover:text-foreground"
               >
                 <X className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
 
             <form onSubmit={handleCreateCategory} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5">
-                  Category Name *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Modernist Villas, Alpine Châteaux, Waterfront"
+                <Typography
+                  as="label"
+                  variant="extraSmallBold"
+                  className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5"
+                >
+                  Category Type *
+                </Typography>
+                <select
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-sm bg-background border border-border text-foreground text-xs focus:outline-none focus:border-accent"
+                  className="w-full px-3 py-2.5 rounded-sm bg-background border border-border text-foreground text-xs focus:outline-none focus:border-accent capitalize"
                   required
-                />
+                >
+                  {VALID_CATEGORY_NAMES.map((catName) => (
+                    <option key={catName} value={catName} className="capitalize">
+                      {catName}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-foreground uppercase tracking-wider mb-1.5">
-                  Cover Image URL (Optional)
-                </label>
-                <input
+                <TextField
+                  label="Cover Image URL (Optional)"
                   type="text"
-                  placeholder="e.g. /images/villa-modernist.jpg or https://..."
+                  placeholder="https://res.cloudinary.com/... or /images/villa-modernist.jpg"
                   value={newCategoryImage}
                   onChange={(e) => setNewCategoryImage(e.target.value)}
-                  className="w-full px-3 py-2 rounded-sm bg-background border border-border text-foreground text-xs focus:outline-none focus:border-accent"
+                  inputClass="!h-10 text-xs"
                 />
                 <Typography as="p" variant="extraSmallRegular" className="text-[11px] text-body mt-1">
-                  Leave blank to use the default image.
+                  Leave blank to use the default architectural image.
                 </Typography>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
-                <button
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-sm border border-border text-xs font-semibold text-body hover:text-foreground hover:bg-muted transition-colors"
+                  className="px-4 py-2 text-xs"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 rounded-sm bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  loading={isSubmitting}
+                  className="px-4 py-2 text-xs uppercase tracking-wider"
                 >
-                  {isSubmitting ? 'Adding...' : 'Add Category'}
-                </button>
+                  Add Category
+                </Button>
               </div>
             </form>
           </div>
