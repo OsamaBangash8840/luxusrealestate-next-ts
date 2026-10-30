@@ -265,7 +265,7 @@ export const DashboardProperties = (): React.ReactElement => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="px-2 py-0.5 rounded-[2px] bg-accent/15 border border-accent/40 text-accent font-mono text-[10px] font-bold uppercase tracking-wider">
-                        {selectedProperty.category || 'Featured'}
+                        {typeof selectedProperty.category === 'object' && selectedProperty.category !== null ? selectedProperty.category.name : (selectedProperty.category || 'Featured')}
                       </span>
                       <span className="text-xs font-mono text-body">
                         ID: {selectedProperty._id}
@@ -494,3 +494,4 @@ export const DashboardProperties = (): React.ReactElement => {
     </div>
   )
 }
+

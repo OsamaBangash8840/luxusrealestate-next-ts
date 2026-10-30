@@ -26,6 +26,16 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
   const propertyBed = generateBedroomsAndBathrooms()
   const propertyLotSize = generateLotSize()
 
+  const formatAddress = (addr: any): string => {
+  if (!addr) return ''
+  if (typeof addr === 'string') return addr
+  if (typeof addr === 'object') {
+    const parts = [addr.street, addr.city, addr.state, addr.country].filter(Boolean)
+    return parts.length > 0 ? parts.join(', ') : ''
+  }
+  return ''
+}
+
   const fallbackImages = [
     '/images/villa-modernist.jpg',
     '/images/sky-penthouse.jpg',
@@ -38,6 +48,18 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
     property.images?.[0] && property.images[0].trim() !== '' && !property.images[0].includes('placeholder')
       ? property.images[0]
       : fallbackImage
+
+  const displayAddress =
+    address ||
+    property.locationName ||
+    formatAddress(property.address) ||
+    (property.type === 'Sky Penthouse'
+      ? 'Tribeca, New York, NY'
+      : property.type === 'Waterfront Haven'
+      ? "Cap d'Antibes, France"
+      : property.type === 'Modernist Villa'
+      ? 'Bel-Air, Los Angeles, CA'
+      : 'St. Moritz, Switzerland')
 
   return (
     <Cards className="relative cursor-pointer group flex flex-col overflow-hidden border-border bg-card shadow-sm transition-all hover:shadow-md" onClick={onClick}>
@@ -123,12 +145,15 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
         <div className="mt-auto flex items-center gap-1.5 pt-2 border-t border-border/60">
           <FaMapMarkerAlt className="text-accent text-xs flex-shrink-0" />
           <Typography variant="smallRegular" className="text-body line-clamp-1 text-xs">
-            {address || property.locationName || property.address || (property.type === 'Sky Penthouse' ? 'Tribeca, New York, NY' : property.type === 'Waterfront Haven' ? "Cap d'Antibes, France" : property.type === 'Modernist Villa' ? 'Bel-Air, Los Angeles, CA' : 'St. Moritz, Switzerland')}
+            {displayAddress}
           </Typography>
         </div>
       </div>
     </Cards>
   )
 }
+
+
+
 
 
