@@ -13,8 +13,16 @@ export const ThirdSection: React.FC = () => {
   const { data: properties, isLoading } = useGetPropertyQuery()
 
   // Select top 3 approved flagship estates with fallback to curated architectural icons
-  const rawFeatured = properties
-    ?.filter((p) => p.status === 'approved' || !p.status)
+  const propertyArray: any[] = Array.isArray(properties)
+    ? properties
+    : Array.isArray((properties as any)?.data)
+    ? (properties as any).data
+    : Array.isArray((properties as any)?.properties)
+    ? (properties as any).properties
+    : []
+
+  const rawFeatured = propertyArray
+    .filter((p) => p.status === 'approved' || !p.status)
     .slice(0, 3)
 
   const defaultFeatured = [

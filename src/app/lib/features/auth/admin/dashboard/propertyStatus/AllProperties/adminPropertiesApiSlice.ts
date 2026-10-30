@@ -12,27 +12,25 @@ export const adminPropertiesApiSlice = createApi({
         url: 'api/admin/approved',
         method: 'GET',
       }),
-      transformResponse: (response: { success: boolean; properties: Record<string, IProperty> }) =>
-        Object.values(response.properties),
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
     }),
     pendingProperties: builder.query<IProperty[], void>({
       query: () => ({
         url: 'api/admin/pending',
         method: 'GET',
       }),
-      transformResponse: (response: { success: boolean; properties: Record<string, IProperty> }) =>
-        Object.values(response.properties),
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
     }),
     rejectedProperties: builder.query<IProperty[], void>({
       query: () => ({
         url: 'api/admin/rejected',
         method: 'GET',
       }),
-      transformResponse: (response: { success: boolean; properties: Record<string, IProperty> }) =>
-        Object.values(response.properties),
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
     }),
   }),
 })
 
 export const { useApprovedPropertiesQuery, usePendingPropertiesQuery, useRejectedPropertiesQuery } =
   adminPropertiesApiSlice
+

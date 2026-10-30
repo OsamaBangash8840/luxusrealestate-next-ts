@@ -36,15 +36,22 @@ const resolveToken = (): string | null => {
 }
 
 const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: baseURL }) =>
+  ({ baseUrl = baseURL }: { baseUrl?: string } = {}) =>
   async ({ url, method, body, params, headers }: AxiosBaseQueryArgs): Promise<any> => {
     const token = resolveToken()
     const tokenHeaders = token ? { Authorization: `Bearer ${token}` } : {}
     const mergedHeaders = { ...headers, ...tokenHeaders }
 
+    const effectiveBase = (baseUrl || baseURL).replace(/\/+$/, '')
+    const cleanUrl = url.replace(/^\/+/, '')
+    const fullUrl =
+      url.startsWith('http://') || url.startsWith('https://')
+        ? url
+        : `${effectiveBase}/${cleanUrl}`
+
     try {
       const result: AxiosResponse = await axiosInstance({
-        url: baseUrl + url,
+        url: fullUrl,
         method,
         data: body,
         params,
@@ -53,7 +60,17 @@ const axiosBaseQuery =
         timeout: 10000,
       })
 
-      return { data: result.data }
+      // Backend wraps payloads in ApiResponse: { statusCode, data, message, success }
+      // Unpack result.data.data when present so RTK Query consumers receive the actual payload directly.
+      const responseData =
+        result.data &&
+        typeof result.data === 'object' &&
+        'data' in result.data &&
+        ('statusCode' in result.data || 'success' in result.data)
+          ? result.data.data
+          : result.data
+
+      return { data: responseData }
     } catch (axiosError) {
       const err = axiosError as AxiosError
       return {

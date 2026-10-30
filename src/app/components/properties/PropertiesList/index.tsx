@@ -90,8 +90,14 @@ export const PropertiesList: React.FC = () => {
   // Dynamic Categories from Backend
   const categories = useMemo(() => {
     const base = [{ id: 'all', label: 'All Estates', matchValue: 'all' }]
-    if (dbCategories && dbCategories.length > 0) {
-      const mapped = dbCategories.map((c) => ({
+    const categoryList: any[] = Array.isArray(dbCategories)
+      ? dbCategories
+      : Array.isArray((dbCategories as any)?.data)
+      ? (dbCategories as any).data
+      : []
+
+    if (categoryList && categoryList.length > 0) {
+      const mapped = categoryList.map((c) => ({
         id: c._id || c.name.toLowerCase(),
         label: c.name,
         matchValue: c.name.toLowerCase(),
@@ -109,7 +115,15 @@ export const PropertiesList: React.FC = () => {
 
   // Filter properties
   const filteredProperties = useMemo(() => {
-    const listToFilter = (rawProperties && rawProperties.length > 0) ? rawProperties : defaultEstates
+    const propertyList: any[] = Array.isArray(rawProperties)
+      ? rawProperties
+      : Array.isArray((rawProperties as any)?.data)
+      ? (rawProperties as any).data
+      : Array.isArray((rawProperties as any)?.properties)
+      ? (rawProperties as any).properties
+      : []
+
+    const listToFilter = (propertyList && propertyList.length > 0) ? propertyList : defaultEstates
     return listToFilter.filter((p) => {
       // Status filter: approved only
       if (p.status && p.status !== 'approved') return false

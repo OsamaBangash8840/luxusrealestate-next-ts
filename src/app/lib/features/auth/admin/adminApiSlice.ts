@@ -39,7 +39,7 @@ export const adminApiSlice = createApi({
         url: 'api/admin/pending',
         method: 'GET',
       }),
-      transformResponse: (response: { properties: IProperty[] }) => response?.properties || [],
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
       providesTags: ['AdminPending'],
     }),
 
@@ -48,7 +48,7 @@ export const adminApiSlice = createApi({
         url: 'api/admin/approved',
         method: 'GET',
       }),
-      transformResponse: (response: { properties: IProperty[] }) => response?.properties || [],
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
       providesTags: ['AdminApproved'],
     }),
 
@@ -57,7 +57,7 @@ export const adminApiSlice = createApi({
         url: 'api/admin/rejected',
         method: 'GET',
       }),
-      transformResponse: (response: { properties: IProperty[] }) => response?.properties || [],
+      transformResponse: (response: any) => Array.isArray(response) ? response : Array.isArray(response?.properties) ? response.properties : response?.properties ? Object.values(response.properties) : [],
       providesTags: ['AdminRejected'],
     }),
 
@@ -84,3 +84,4 @@ export const {
   useGetRejectedPropertiesQuery,
   useUpdatePropertyStatusMutation,
 } = adminApiSlice
+

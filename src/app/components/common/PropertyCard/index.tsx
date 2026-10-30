@@ -48,7 +48,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
           property.status === 'rejected' ? 'bg-destructive' : 'bg-primary'
         }`}
       >
-        {pathname === '/admin' ? property.status : property.propertyStatus}
+        {pathname === '/admin' ? property.status : property.propertyStatus || (property.status === 'approved' ? 'Featured' : property.status || 'Active')}
       </Typography>
 
       {/* Image Gallery Container */}
@@ -76,7 +76,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
             variant="extraSmallBold"
             className="font-mono text-accent uppercase tracking-wider font-bold text-[10px]"
           >
-            {property.type || property.category || 'Property'}
+            {property.type || (typeof property.category === 'object' && property.category !== null ? property.category.name : property.category) || 'Property'}
           </Typography>
         </div>
 
@@ -130,3 +130,5 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, a
     </Cards>
   )
 }
+
+

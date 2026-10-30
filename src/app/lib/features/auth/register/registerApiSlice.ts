@@ -3,7 +3,7 @@ import axiosBaseQuery from '../../axiosBaseQuery'
 import type { IRegisterRequestBody, IRegisterUserResponse } from './types'
 
 export const registerApiSlice = createApi({
-  baseQuery: axiosBaseQuery({ baseUrl: '' }), // Make sure this matches your baseURL config
+  baseQuery: axiosBaseQuery(),
   reducerPath: 'regisApi',
   tagTypes: [],
   endpoints: (build) => ({
@@ -21,3 +21,4 @@ export const registerApiSlice = createApi({
 })
 
 export const { useRegisterMutation } = registerApiSlice
+
