@@ -38,7 +38,15 @@ export default function RootLayout({
             {children}
           </div>
           {!isAdminRoute && <Footer />}
-          <ToastContainer position="top-center" />
+          <ToastContainer
+            position="top-right"
+            autoClose={4000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            theme="light"
+          />
         </StoreProvider>
       </body>
     </html>
