@@ -1,106 +1,155 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { Home, Compass, ShieldAlert } from 'lucide-react'
-import { Button, Container, Typography } from '@/app/components/common'
+import { useRouter } from 'next/navigation'
+import { Home, Compass, Search, ArrowRight, ShieldAlert, Sparkles } from 'lucide-react'
+import { Container, Typography } from '@/app/components/common'
 
 export default function NotFound() {
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/properties?location=${encodeURIComponent(searchQuery.trim())}`)
+    } else {
+      router.push('/properties')
+    }
+  }
+
   return (
-    <div className="flex min-h-[75vh] items-center justify-center bg-background px-4 py-20">
-      <Container className="max-w-2xl text-center">
-        {/* Notice Eyebrow */}
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-card px-4 py-1.5 shadow-sm">
-          <ShieldAlert className="h-4 w-4 text-accent" />
-          <Typography
-            as="span"
-            variant="extraSmallBold"
-            className="font-mono uppercase tracking-widest text-accent text-xs font-semibold"
+    <div className="flex min-h-[82vh] items-center justify-center bg-background px-4 py-16">
+      <Container className="max-w-3xl text-center">
+        {/* Monumental Architectural 404 Watermark & Status Eyebrow */}
+        <div className="relative mb-6 flex flex-col items-center justify-center">
+          {/* Giant Monumental 404 Display Numeral */}
+          <span
+            aria-hidden="true"
+            className="text-[120px] sm:text-[180px] md:text-[220px] font-black tracking-tighter leading-none select-none text-foreground/[0.07] font-mono pointer-events-none"
           >
-            Error 404 &bull; Page Not Found
-          </Typography>
+            404
+          </span>
+
+          {/* Floating Luxury Status Pill anchored over the numeral */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="inline-flex items-center gap-2 rounded-sm border border-accent/40 bg-card/95 px-4 py-2 shadow-sm backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+              <ShieldAlert className="h-3.5 w-3.5 text-accent" />
+              <span className="font-mono text-xs uppercase tracking-widest font-semibold text-accent">
+                HTTP 404 &bull; Page Not Found
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Headline */}
+        {/* Primary Clear Headline */}
         <Typography
           as="h1"
           variant="h1"
-          className="mb-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground"
+          className="mb-3 text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground"
         >
-          Property Not Found
+          Page Not Found
         </Typography>
 
-        {/* Subtitle */}
+        {/* Reassuring Context Narrative */}
         <Typography
           as="p"
           variant="bodyRegular"
-          className="mx-auto mb-8 max-w-xl text-base sm:text-lg text-body leading-relaxed"
+          className="mx-auto mb-8 max-w-xl text-sm sm:text-base text-body leading-relaxed"
         >
-          The property or page you are looking for does not exist. It may have been sold, removed, or the link may be incorrect.
+          The page or estate address you requested could not be resolved. The listing may have been acquired, the URL may contain a typographical error, or the record has been relocated.
         </Typography>
 
-        {/* Action Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-          <Button href="/" variant="default" className="gap-2 px-7 py-3.5">
-            <Home className="h-4 w-4" />
-            <Typography as="span" variant="smallBold" className="text-primary-foreground">
-              Back to Home
-            </Typography>
-          </Button>
+        {/* Embedded Fast-Search Console */}
+        <form
+          onSubmit={handleSearchSubmit}
+          className="mx-auto mb-8 max-w-md flex items-center gap-2 p-1.5 rounded-sm border border-border bg-card shadow-sm focus-within:border-accent transition-colors"
+        >
+          <div className="relative flex-1 flex items-center pl-3">
+            <Search className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by city, enclave, or estate title..."
+              className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-sm bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider hover:bg-primary/90 transition-colors shrink-0"
+          >
+            Search
+          </button>
+        </form>
 
-          <Button
+        {/* Primary Navigation Action Controls */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-12">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-sm bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-sm"
+          >
+            <Home className="h-4 w-4" />
+            <span>Return to Sanctuary</span>
+          </Link>
+
+          <Link
             href="/properties"
-            variant="outline"
-            className="gap-2 border-border bg-card px-7 py-3.5 text-foreground hover:bg-muted"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-sm border border-border bg-card text-foreground text-xs font-semibold uppercase tracking-wider hover:bg-muted hover:border-accent/40 transition-colors"
           >
             <Compass className="h-4 w-4 text-accent" />
-            <Typography as="span" variant="smallBold" className="text-foreground">
-              Browse All Properties
-            </Typography>
-          </Button>
+            <span>Explore Active Estates</span>
+          </Link>
         </div>
 
-        {/* Quick Links Directory */}
+        {/* Curated Enclaves Directory Links */}
         <div className="pt-8 border-t border-border">
-          <Typography
-            as="span"
-            variant="extraSmallBold"
-            className="text-[11px] font-mono text-muted-foreground uppercase tracking-widest block mb-4"
-          >
-            Popular Categories:
-          </Typography>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-1.5 mb-4 text-[11px] font-mono text-muted-foreground uppercase tracking-widest">
+            <Sparkles className="h-3 w-3 text-accent" />
+            <span>Curated Architectural Portfolios</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
             <Link
               href="/properties?category=villa"
-              className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
+              className="px-3.5 py-1.5 rounded-sm bg-card border border-border hover:border-accent text-xs font-medium text-foreground transition-all flex items-center gap-1.5"
             >
-              <Typography as="span" variant="extraSmallMedium">
-                Modernist Villas
-              </Typography>
+              <span>Modernist Villas</span>
+              <ArrowRight className="h-3 w-3 text-accent" />
             </Link>
+
             <Link
-              href="/properties?category=apartment"
-              className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
+              href="/properties?category=penthouse"
+              className="px-3.5 py-1.5 rounded-sm bg-card border border-border hover:border-accent text-xs font-medium text-foreground transition-all flex items-center gap-1.5"
             >
-              <Typography as="span" variant="extraSmallMedium">
-                Sky Penthouses
-              </Typography>
+              <span>Sky Penthouses</span>
+              <ArrowRight className="h-3 w-3 text-accent" />
             </Link>
+
             <Link
-              href="/properties?category=house"
-              className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
+              href="/properties?category=waterfront"
+              className="px-3.5 py-1.5 rounded-sm bg-card border border-border hover:border-accent text-xs font-medium text-foreground transition-all flex items-center gap-1.5"
             >
-              <Typography as="span" variant="extraSmallMedium">
-                Waterfront Havens
-              </Typography>
+              <span>Waterfront Havens</span>
+              <ArrowRight className="h-3 w-3 text-accent" />
             </Link>
+
+            <Link
+              href="/properties?category=architectural"
+              className="px-3.5 py-1.5 rounded-sm bg-card border border-border hover:border-accent text-xs font-medium text-foreground transition-all flex items-center gap-1.5"
+            >
+              <span>Architectural Icons</span>
+              <ArrowRight className="h-3 w-3 text-accent" />
+            </Link>
+
             <Link
               href="/contact"
-              className="px-3.5 py-1.5 rounded-full bg-card border border-border hover:border-accent text-xs text-foreground transition-all"
+              className="px-3.5 py-1.5 rounded-sm bg-card border border-border hover:border-accent text-xs font-medium text-foreground transition-all flex items-center gap-1.5"
             >
-              <Typography as="span" variant="extraSmallMedium">
-                Private Client Desk
-              </Typography>
+              <span>Private Client Desk</span>
+              <ArrowRight className="h-3 w-3 text-accent" />
             </Link>
           </div>
         </div>
