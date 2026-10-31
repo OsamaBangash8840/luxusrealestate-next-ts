@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { StoreProvider } from './StoreProvider'
+import { ThemeProvider } from './providers/ThemeProvider'
 import { Navbar, Footer } from './components/layout/website'
 
 const geistSans = localFont({
@@ -30,24 +31,30 @@ export default function RootLayout({
   const isAdminRoute = pathname.startsWith('/admin')
 
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-body flex flex-col min-h-screen`}>
-        <StoreProvider>
-          {!isAdminRoute && <Navbar />}
-          <div className="flex-1">
-            {children}
-          </div>
-          {!isAdminRoute && <Footer />}
-          <ToastContainer
-            position="top-right"
-            autoClose={4000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            pauseOnHover
-            theme="light"
-          />
-        </StoreProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-body flex flex-col min-h-screen bg-background text-foreground`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <StoreProvider>
+            {!isAdminRoute && <Navbar />}
+            <div className="flex-1">
+              {children}
+            </div>
+            {!isAdminRoute && <Footer />}
+            <ToastContainer
+              position="top-right"
+              autoClose={4000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              pauseOnHover
+            />
+          </StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

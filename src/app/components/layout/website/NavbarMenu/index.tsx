@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, Plus, User, Building2, Heart, ArrowRight } from 'lucide-react'
+import { ThemeToggle } from '@/app/components/common'
 
 export const NavMenu = (): React.ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
@@ -59,6 +60,13 @@ export const NavMenu = (): React.ReactElement => {
 
           {/* Action CTAs */}
           <div className="mt-auto space-y-3 pt-6 border-t border-border">
+            <div className="flex items-center justify-between pb-2 border-b border-border/40">
+              <span className="text-xs font-semibold uppercase tracking-wider text-body">
+                Theme Display
+              </span>
+              <ThemeToggle variant="pill" />
+            </div>
+
             <Link
               href="/properties/addProperty"
               onClick={() => setIsOpen(false)}

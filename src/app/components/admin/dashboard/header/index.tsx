@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Menu, ChevronDown, ShieldCheck, Home, LogOut } from 'lucide-react'
 import { useAuth } from '@/app/hooks/useAuth'
+import { ThemeToggle } from '@/app/components/common'
 
 interface HeaderProps {
   toggleSidebar: () => void
@@ -47,7 +48,9 @@ export function Header({
       </div>
 
       {/* User Actions & Dropdown */}
-      <div className="relative" ref={dropdownRef}>
+      <div className="flex items-center gap-3">
+        <ThemeToggle />
+        <div className="relative" ref={dropdownRef}>
         <button
           type="button"
           onClick={toggleDropdown}
@@ -84,6 +87,7 @@ export function Header({
             </button>
           </div>
         )}
+        </div>
       </div>
     </header>
   )

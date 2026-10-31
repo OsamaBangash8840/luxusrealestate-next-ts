@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { User, LogOut, Heart, Building2, ShieldCheck, ChevronDown, Plus, LayoutDashboard } from 'lucide-react'
 import { routes } from '@/app/base/utils/constants'
-import { Container, Typography } from '@/app/components/common'
+import { Container, Typography, ThemeToggle } from '@/app/components/common'
 import { useAuth } from '@/app/hooks/useAuth'
 import { NotificationBell } from '../NotificationBell'
 import { NavMenu } from '../NavbarMenu'
@@ -106,6 +106,8 @@ export const Navbar = (): React.ReactElement => {
               Add Property
             </Typography>
           </Link>
+
+          <ThemeToggle />
 
           {isAuthenticated && <NotificationBell />}
 

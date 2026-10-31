@@ -53,8 +53,23 @@ export default function SinglePropertyPage() {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
 
-  // Reverse geocode if coordinates exist
+  // Set address from property data or reverse geocode if coordinates exist
   useEffect(() => {
+    if (property?.address) {
+      if (typeof property.address === 'string' && property.address.trim()) {
+        setAddress(property.address)
+        return
+      }
+      if (typeof property.address === 'object') {
+        const addrObj = property.address as any
+        const parts = [addrObj.street, addrObj.city, addrObj.state, addrObj.country].filter(Boolean)
+        if (parts.length > 0) {
+          setAddress(parts.join(', '))
+          return
+        }
+      }
+    }
+
     if (property?.location?.coordinates) {
       const [lng, lat] = property.location.coordinates
       const fetchAddress = async () => {

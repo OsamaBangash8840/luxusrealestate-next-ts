@@ -73,7 +73,11 @@ export const EditProperty: React.FC<EditPropertyProps> = ({ propertyId }) => {
       setPrice(initialData.price || '')
       setType(initialData.type || 'Modernist Villa')
       setCategory(typeof initialData.category === 'object' && initialData.category !== null ? (initialData.category as any).name : String(initialData.category || ''))
-      setAddress(initialData.address || (initialData.location as any)?.address || '')
+      const rawAddr = initialData.address || (initialData.location as any)?.address || ''
+      const formattedAddr = typeof rawAddr === 'object' && rawAddr !== null
+        ? [rawAddr.street, rawAddr.city, rawAddr.state, rawAddr.country].filter(Boolean).join(', ')
+        : String(rawAddr || '')
+      setAddress(formattedAddr)
       setSize(initialData.size || '')
       setLotSize(initialData.lotSize || '')
       setBuildYear(initialData.buildYear || 2024)

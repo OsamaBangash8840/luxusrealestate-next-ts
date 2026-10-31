@@ -53,6 +53,21 @@ export const SingleProperty = ({
   }, [isOpen])
 
   useEffect(() => {
+    if (property?.address) {
+      if (typeof property.address === 'string' && property.address.trim()) {
+        setAddress(property.address)
+        return
+      }
+      if (typeof property.address === 'object') {
+        const addrObj = property.address as any
+        const parts = [addrObj.street, addrObj.city, addrObj.state, addrObj.country].filter(Boolean)
+        if (parts.length > 0) {
+          setAddress(parts.join(', '))
+          return
+        }
+      }
+    }
+
     if (property?.location?.coordinates) {
       const reverseGeocode = async (lat: number, lng: number) => {
         const url = `http://api.positionstack.com/v1/reverse?access_key=${API_KEY}&query=${lat},${lng}&output=json`
