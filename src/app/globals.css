@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -160,28 +160,31 @@
   }
 }
 /* ==========================================================================
-   Luxus Real Estate â€” Architectural Toast System (React-Toastify Theme)
+   Luxus Real Estate — Architectural Toast System (React-Toastify Theme)
    ========================================================================== */
 
-:root {
+:root,
+body,
+.Toastify {
   --toastify-color-light: hsl(var(--card));
   --toastify-color-dark: hsl(var(--card));
   --toastify-color-info: hsl(var(--accent));
-  --toastify-color-success: hsl(var(--success));
+  --toastify-color-success: hsl(var(--accent)); /* Champagne Bronze luxury tone instead of default green */
   --toastify-color-warning: hsl(var(--warning));
   --toastify-color-error: hsl(var(--destructive));
   --toastify-icon-color-info: hsl(var(--accent));
-  --toastify-icon-color-success: hsl(var(--success));
+  --toastify-icon-color-success: hsl(var(--accent)); /* Bronze icon */
   --toastify-icon-color-warning: hsl(var(--warning));
   --toastify-icon-color-error: hsl(var(--destructive));
+  --toastify-color-progress-light: hsl(var(--accent));
+  --toastify-color-progress-dark: hsl(var(--accent));
+  --toastify-color-progress-success: hsl(var(--accent)); /* Bronze progress bar */
   --toastify-toast-width: 380px;
   --toastify-toast-background: hsl(var(--card));
   --toastify-toast-min-height: 52px;
   --toastify-font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --toastify-text-color-light: hsl(var(--foreground));
   --toastify-text-color-dark: hsl(var(--foreground));
-  --toastify-color-progress-light: hsl(var(--accent));
-  --toastify-color-progress-dark: hsl(var(--accent));
 }
 
 .Toastify__toast-container {
@@ -196,11 +199,11 @@
   line-height: 1.45;
   letter-spacing: -0.01em;
   padding: 14px 16px;
-  border-radius: var(--radius); /* 2px architectural crisp edges */
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
-  box-shadow: 0 10px 30px -4px rgba(20, 20, 19, 0.08), 0 4px 12px -2px rgba(20, 20, 19, 0.04);
+  border-radius: var(--radius) !important; /* 2px architectural crisp edges */
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: 0 10px 30px -4px rgba(20, 20, 19, 0.08), 0 4px 12px -2px rgba(20, 20, 19, 0.04) !important;
   margin-bottom: 12px;
   cursor: pointer;
   display: flex;
@@ -210,7 +213,7 @@
 }
 
 .Toastify__toast:hover {
-  box-shadow: 0 14px 36px -4px rgba(20, 20, 19, 0.12), 0 6px 16px -2px rgba(20, 20, 19, 0.06);
+  box-shadow: 0 14px 36px -4px rgba(20, 20, 19, 0.12), 0 6px 16px -2px rgba(20, 20, 19, 0.06) !important;
 }
 
 .Toastify__toast-body {
@@ -219,7 +222,7 @@
   display: flex;
   align-items: center;
   font-weight: 500;
-  color: hsl(var(--foreground));
+  color: hsl(var(--foreground)) !important;
 }
 
 .Toastify__toast-icon {
@@ -249,58 +252,68 @@
 }
 
 /* State Indicators: Thin Architectural Left Border & Icon Colors */
+/* Success uses Brushed Champagne Bronze (replaces default green) */
 .Toastify__toast--success {
-  border-left: 3px solid hsl(var(--success));
+  border-left: 3px solid hsl(var(--accent)) !important;
 }
-.Toastify__toast--success .Toastify__toast-icon svg {
-  fill: hsl(var(--success));
+.Toastify__toast--success .Toastify__toast-icon svg,
+.Toastify__toast--success .Toastify__toast-icon {
+  fill: hsl(var(--accent)) !important;
+  color: hsl(var(--accent)) !important;
 }
 .Toastify__progress-bar--success {
-  background: hsl(var(--success));
+  background: hsl(var(--accent)) !important;
 }
 
 .Toastify__toast--error {
-  border-left: 3px solid hsl(var(--destructive));
+  border-left: 3px solid hsl(var(--destructive)) !important;
 }
-.Toastify__toast--error .Toastify__toast-icon svg {
-  fill: hsl(var(--destructive));
+.Toastify__toast--error .Toastify__toast-icon svg,
+.Toastify__toast--error .Toastify__toast-icon {
+  fill: hsl(var(--destructive)) !important;
+  color: hsl(var(--destructive)) !important;
 }
 .Toastify__progress-bar--error {
-  background: hsl(var(--destructive));
+  background: hsl(var(--destructive)) !important;
 }
 
 .Toastify__toast--warning {
-  border-left: 3px solid hsl(var(--warning));
+  border-left: 3px solid hsl(var(--warning)) !important;
 }
-.Toastify__toast--warning .Toastify__toast-icon svg {
-  fill: hsl(var(--warning));
+.Toastify__toast--warning .Toastify__toast-icon svg,
+.Toastify__toast--warning .Toastify__toast-icon {
+  fill: hsl(var(--warning)) !important;
+  color: hsl(var(--warning)) !important;
 }
 .Toastify__progress-bar--warning {
-  background: hsl(var(--warning));
+  background: hsl(var(--warning)) !important;
 }
 
 .Toastify__toast--info {
-  border-left: 3px solid hsl(var(--accent));
+  border-left: 3px solid hsl(var(--accent)) !important;
 }
-.Toastify__toast--info .Toastify__toast-icon svg {
-  fill: hsl(var(--accent));
+.Toastify__toast--info .Toastify__toast-icon svg,
+.Toastify__toast--info .Toastify__toast-icon {
+  fill: hsl(var(--accent)) !important;
+  color: hsl(var(--accent)) !important;
 }
 .Toastify__progress-bar--info {
-  background: hsl(var(--accent));
+  background: hsl(var(--accent)) !important;
 }
 
 .Toastify__toast--default {
-  border-left: 3px solid hsl(var(--primary));
+  border-left: 3px solid hsl(var(--primary)) !important;
 }
 .Toastify__progress-bar--default {
-  background: hsl(var(--primary));
+  background: hsl(var(--primary)) !important;
 }
 
 /* 2px Hairline Progress Bar */
 .Toastify__progress-bar {
-  height: 2px;
-  opacity: 0.9;
+  height: 2px !important;
+  opacity: 0.9 !important;
   bottom: 0;
+  background: hsl(var(--accent)) !important;
 }
 
 .Toastify__progress-bar--bg {

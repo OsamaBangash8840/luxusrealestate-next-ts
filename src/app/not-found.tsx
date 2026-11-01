@@ -1,24 +1,14 @@
-'use client'
-
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Home, Compass, Search, ArrowRight, ShieldAlert, Sparkles } from 'lucide-react'
 import { Container, Typography } from '@/app/components/common'
 
+export const metadata = {
+  title: '404 - Sanctuary Not Found | Luxus Real Estate',
+  description: 'The requested luxury estate or page could not be located in the current catalogue.',
+}
+
 export default function NotFound() {
-  const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/properties?location=${encodeURIComponent(searchQuery.trim())}`)
-    } else {
-      router.push('/properties')
-    }
-  }
-
   return (
     <div className="flex min-h-[82vh] items-center justify-center bg-background px-4 py-16">
       <Container className="max-w-3xl text-center">
@@ -62,17 +52,17 @@ export default function NotFound() {
           The page or estate address you requested could not be resolved. The listing may have been acquired, the URL may contain a typographical error, or the record has been relocated.
         </Typography>
 
-        {/* Embedded Fast-Search Console */}
+        {/* Embedded Fast-Search Console (Native GET submission) */}
         <form
-          onSubmit={handleSearchSubmit}
+          action="/properties"
+          method="GET"
           className="mx-auto mb-8 max-w-md flex items-center gap-2 p-1.5 rounded-sm border border-border bg-card shadow-sm focus-within:border-accent transition-colors"
         >
           <div className="relative flex-1 flex items-center pl-3">
             <Search className="h-4 w-4 text-muted-foreground mr-2 shrink-0" />
             <input
               type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              name="location"
               placeholder="Search by city, enclave, or estate title..."
               className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
             />

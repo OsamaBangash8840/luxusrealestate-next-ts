@@ -3,7 +3,22 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { User, LogOut, Heart, Building2, ShieldCheck, ChevronDown, Plus, LayoutDashboard } from 'lucide-react'
+import {
+  User,
+  LogOut,
+  Heart,
+  Building2,
+  ChevronDown,
+  Plus,
+  LayoutDashboard,
+  CheckSquare,
+  Tags,
+  Users,
+  Bookmark,
+  MessageSquare,
+  FileText,
+  Calendar,
+} from 'lucide-react'
 import { routes } from '@/app/base/utils/constants'
 import { Container, Typography, ThemeToggle } from '@/app/components/common'
 import { useAuth } from '@/app/hooks/useAuth'
@@ -13,6 +28,9 @@ import { NavMenu } from '../NavbarMenu'
 export const Navbar = (): React.ReactElement => {
   const router = useRouter()
   const { isAuthenticated, user, isAdmin, logout } = useAuth()
+  const isSellerRole = !isAdmin && user?.role === 'seller'
+  const isBuyerRole = !isAdmin && user?.role !== 'seller'
+
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -78,11 +96,11 @@ export const Navbar = (): React.ReactElement => {
             </Typography>
           </Link>
           <Link
-            href="/properties?category=penthouse"
+            href="/properties?category=apartment"
             className="text-xs font-semibold uppercase tracking-wider text-body hover:text-foreground transition-colors"
           >
             <Typography as="span" variant="extraSmallBold" className="tracking-wider">
-              Penthouses
+              Apartments
             </Typography>
           </Link>
           <Link
@@ -95,17 +113,29 @@ export const Navbar = (): React.ReactElement => {
           </Link>
         </div>
 
-        {/* Right Actions: Add Property & Auth Controls */}
+        {/* Right Actions: Role-Aware CTA & Auth Controls */}
         <div className="flex items-center gap-3">
-          <Link
-            href="/properties/addProperty"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm border border-border text-foreground hover:bg-muted text-xs font-semibold uppercase tracking-wider transition-colors min-h-[40px]"
-          >
-            <Plus className="h-3.5 w-3.5 text-accent" />
-            <Typography as="span" variant="extraSmallBold" className="tracking-wider uppercase">
-              Add Property
-            </Typography>
-          </Link>
+          {/* Admin Role Action */}
+          {isAuthenticated && isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[38px]"
+            >
+              <LayoutDashboard className="h-3.5 w-3.5 text-accent" />
+              <span>Admin Console</span>
+            </Link>
+          )}
+
+          {/* Seller Role Action */}
+          {isAuthenticated && isSellerRole && (
+            <Link
+              href="/properties/addProperty"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-sm border border-border text-foreground hover:bg-muted text-xs font-semibold uppercase tracking-wider transition-colors min-h-[38px]"
+            >
+              <Plus className="h-3.5 w-3.5 text-accent" />
+              <span>List Property</span>
+            </Link>
+          )}
 
           <ThemeToggle />
 
@@ -117,6 +147,7 @@ export const Navbar = (): React.ReactElement => {
                 type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 p-1.5 rounded-sm hover:bg-muted transition-colors focus:outline-none"
+                aria-label="User navigation menu"
               >
                 <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/40 text-accent font-bold text-xs flex items-center justify-center">
                   <User className="h-4 w-4" />
@@ -125,49 +156,158 @@ export const Navbar = (): React.ReactElement => {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 rounded-sm border border-border bg-card shadow-lg py-1.5 z-50 text-xs">
+                <div className="absolute right-0 mt-2 w-56 rounded-sm border border-border bg-card shadow-lg py-1.5 z-50 text-xs">
+                  {/* Account Header with Role Badge */}
                   {user?.username && (
                     <div className="px-3.5 py-2 border-b border-border">
                       <p className="font-semibold text-foreground truncate">{user.username}</p>
-                      <p className="text-[11px] text-body truncate">{user.email}</p>
+                      <div className="flex items-center justify-between gap-1 mt-0.5">
+                        <span className="text-[11px] text-body truncate">{user.email}</span>
+                        <span className="px-1.5 py-0.5 rounded-[2px] bg-accent/15 border border-accent/30 text-accent text-[9px] font-bold uppercase tracking-wider shrink-0">
+                          {isAdmin ? 'Admin' : isSellerRole ? 'Seller' : 'Member'}
+                        </span>
+                      </div>
                     </div>
                   )}
 
+                  {/* ADMIN ROLE NAVIGATION */}
                   {isAdmin && (
-                    <Link
-                      href="/admin/dashboard"
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3.5 py-2 text-accent font-semibold hover:bg-accent/10"
-                    >
-                      <LayoutDashboard className="h-3.5 w-3.5" />
-                      <span>Admin Dashboard</span>
-                    </Link>
+                    <div className="py-1">
+                      <Link
+                        href="/admin/dashboard"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <LayoutDashboard className="h-3.5 w-3.5 text-accent" />
+                        <span>Admin Dashboard</span>
+                      </Link>
+                      <Link
+                        href="/admin/dashboard/pending-properties"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <CheckSquare className="h-3.5 w-3.5 text-accent" />
+                        <span>Review Approvals</span>
+                      </Link>
+                      <Link
+                        href="/admin/dashboard/categories"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Tags className="h-3.5 w-3.5 text-accent" />
+                        <span>Category Manager</span>
+                      </Link>
+                      <Link
+                        href="/admin/dashboard/users"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Users className="h-3.5 w-3.5 text-accent" />
+                        <span>User Moderation</span>
+                      </Link>
+                      <Link
+                        href="/user/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <User className="h-3.5 w-3.5 text-accent" />
+                        <span>My Account</span>
+                      </Link>
+                    </div>
                   )}
 
-                  <Link
-                    href="/user/profile"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted"
-                  >
-                    <User className="h-3.5 w-3.5 text-accent" />
-                    <span>My Profile</span>
-                  </Link>
-                  <Link
-                    href="/user/favorites"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted"
-                  >
-                    <Heart className="h-3.5 w-3.5 text-accent" />
-                    <span>Saved Properties</span>
-                  </Link>
-                  <Link
-                    href="/user/seller"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted"
-                  >
-                    <Building2 className="h-3.5 w-3.5 text-accent" />
-                    <span>Seller Dashboard</span>
-                  </Link>
+                  {/* SELLER ROLE NAVIGATION */}
+                  {isSellerRole && (
+                    <div className="py-1">
+                      <Link
+                        href="/user/seller"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Building2 className="h-3.5 w-3.5 text-accent" />
+                        <span>Seller Overview</span>
+                      </Link>
+                      <Link
+                        href="/user/seller/properties"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <FileText className="h-3.5 w-3.5 text-accent" />
+                        <span>My Listed Properties</span>
+                      </Link>
+                      <Link
+                        href="/properties/addProperty"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Plus className="h-3.5 w-3.5 text-accent" />
+                        <span>List New Property</span>
+                      </Link>
+                      <Link
+                        href="/user/seller/tours"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Calendar className="h-3.5 w-3.5 text-accent" />
+                        <span>Tour Inquiries</span>
+                      </Link>
+                      <Link
+                        href="/chat"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 text-accent" />
+                        <span>Messages &amp; Negotiations</span>
+                      </Link>
+                      <Link
+                        href="/user/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <User className="h-3.5 w-3.5 text-accent" />
+                        <span>Partner Profile</span>
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* BUYER / PRIVATE MEMBER ROLE NAVIGATION */}
+                  {isBuyerRole && (
+                    <div className="py-1">
+                      <Link
+                        href="/user/favorites"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Heart className="h-3.5 w-3.5 text-accent" />
+                        <span>Saved Properties</span>
+                      </Link>
+                      <Link
+                        href="/user/saved-searches"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <Bookmark className="h-3.5 w-3.5 text-accent" />
+                        <span>Saved Searches &amp; Alerts</span>
+                      </Link>
+                      <Link
+                        href="/chat"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <MessageSquare className="h-3.5 w-3.5 text-accent" />
+                        <span>Messages &amp; Inquiries</span>
+                      </Link>
+                      <Link
+                        href="/user/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-foreground hover:bg-muted font-medium"
+                      >
+                        <User className="h-3.5 w-3.5 text-accent" />
+                        <span>My Profile</span>
+                      </Link>
+                    </div>
+                  )}
+
                   <div className="my-1 border-t border-border" />
                   <button
                     type="button"

@@ -26,9 +26,10 @@ import { useGetSinglePropertyQuery } from '@/app/lib/features/properties/propert
 import { Container, MImage, Typography, PropertyDetailSkeleton, ErrorHandler } from '@/app/components/common'
 import { ScheduleTour } from '@/app/components/properties/scheduleTour'
 import { ContactSeller } from '@/app/components/contact/contactSeller'
-import { PropertyReviews, RelatedProperties } from '@/app/components/properties'
+import { PropertyReviews, RelatedProperties, PropertyGallery } from '@/app/components/properties'
 import dynamic from 'next/dynamic'
 import axios from 'axios'
+import { formatAddress, getCategoryName, saleStatusLabel, capitalize } from '@/app/base/utils/property'
 
 const SinglePropertyMap = dynamic(
   () => import('@/app/components/common/Maps/SinglePropertyMap'),
@@ -50,7 +51,6 @@ export default function SinglePropertyPage() {
   const [address, setAddress] = useState<string>('')
   const [scheduleTourOpen, setScheduleTourOpen] = useState(false)
   const [contactSellerOpen, setContactSellerOpen] = useState(false)
-  const [activePhotoIdx, setActivePhotoIdx] = useState(0)
   const [isBookmarked, setIsBookmarked] = useState(false)
 
   // Set address from property data or reverse geocode if coordinates exist
@@ -170,10 +170,12 @@ export default function SinglePropertyPage() {
               <span className="text-xs font-semibold uppercase tracking-widest text-accent">
                 Property Details &bull; Ref #{refCode}
               </span>
-              <span className="inline-flex items-center gap-1 rounded-sm border border-success/30 bg-success/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-success">
-                <CheckCircle2 className="h-3 w-3" />
-                Verified Listing
-              </span>
+              {saleStatusLabel((property as any).propertyStatus) && (
+                <span className="inline-flex items-center gap-1 rounded-sm border border-success/30 bg-success/10 px-2 py-0.5 text-xs font-semibold text-success">
+                  <CheckCircle2 className="h-3 w-3" />
+                  {saleStatusLabel((property as any).propertyStatus)}
+                </span>
+              )}
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-foreground tracking-tight">
               {property.title || 'Luxury Home'}
@@ -194,193 +196,99 @@ export default function SinglePropertyPage() {
           </div>
         </div>
 
-        {/* Curatorial Photography Gallery Mosaic */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-10">
-          {/* Main Hero Photograph (8 cols) */}
-          <div className="md:col-span-8 relative aspect-[16/10] overflow-hidden rounded-sm border border-border bg-muted">
-            <MImage
-              src={images[activePhotoIdx]}
-              alt={property.title || 'Property Photograph'}
-              w={1400}
-              h={900}
-              className="h-full w-full object-cover transition-all duration-300"
-            />
-            <div className="absolute bottom-3 right-3 rounded-sm bg-foreground/80 px-2.5 py-1 text-[11px] font-medium text-background backdrop-blur-sm">
-              Photo {activePhotoIdx + 1} of {images.length}
-            </div>
-          </div>
-
-          {/* Thumbnail Strip (4 cols) */}
-          <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-3">
-            {images.slice(0, 3).map((img, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setActivePhotoIdx(idx)}
-                className={`relative aspect-[16/10] md:aspect-[16/9] overflow-hidden rounded-sm border transition-all ${
-                  activePhotoIdx === idx ? 'border-accent ring-2 ring-accent' : 'border-border opacity-80 hover:opacity-100'
-                }`}
-              >
-                <MImage
-                  src={img}
-                  alt={`Gallery thumbnail ${idx + 1}`}
-                  w={400}
-                  h={240}
-                  className="h-full w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+        {/* Curatorial Photography Gallery */}
+        <div className="mb-10">
+          <PropertyGallery images={images} title={property.title || 'Luxury Estate'} />
         </div>
 
-        {/* Core Spatial Matrix Ribbon */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-12 p-4 rounded-sm bg-card border border-border shadow-sm">
-          <div className="p-3 text-center border-r border-border last:border-r-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Interior Area
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Maximize2 className="h-4 w-4 text-accent" />
-              <span>{property.size || '12,500'} sq.ft</span>
-            </div>
-          </div>
+        {/* Spatial Specifications Ribbon */}
+        {(() => {
+          const specItems = [
+            property.size && {
+              label: 'Interior Area',
+              value: property.size.toLowerCase().includes('sq') ? property.size : `${property.size} sq ft`,
+              icon: Maximize2,
+            },
+            property.lotSize && {
+              label: 'Lot Size',
+              value: property.lotSize,
+              icon: Compass,
+            },
+            property.buildYear && {
+              label: 'Year Built',
+              value: String(property.buildYear),
+              icon: Clock,
+            },
+            property.type && {
+              label: 'Property Type',
+              value: capitalize(property.type),
+              icon: Building,
+            },
+            (property as any).propertyStatus && {
+              label: 'Status',
+              value: saleStatusLabel((property as any).propertyStatus),
+              icon: CheckCircle2,
+            },
+          ].filter(Boolean) as { label: string; value: string; icon: any }[]
 
-          <div className="p-3 text-center border-r border-border last:border-r-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Lot Acreage
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Compass className="h-4 w-4 text-accent" />
-              <span>{property.lotSize || '2.40'} Acres</span>
-            </div>
-          </div>
+          if (specItems.length === 0) return null
 
-          <div className="p-3 text-center border-r border-border last:border-r-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Bedrooms
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Bed className="h-4 w-4 text-accent" />
-              <span>6 Suites</span>
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-12 p-4 rounded-sm bg-card border border-border shadow-sm">
+              {specItems.map((spec, idx) => {
+                const Icon = spec.icon
+                return (
+                  <div key={idx} className="p-3 text-center border-r border-border last:border-r-0">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-body block mb-1">
+                      {spec.label}
+                    </span>
+                    <div className="text-sm sm:text-base font-bold text-foreground flex items-center justify-center gap-1.5">
+                      <Icon className="h-4 w-4 text-accent" />
+                      <span>{spec.value}</span>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          </div>
-
-          <div className="p-3 text-center border-r border-border last:border-r-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Bathrooms
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Bath className="h-4 w-4 text-accent" />
-              <span>9 Baths</span>
-            </div>
-          </div>
-
-          <div className="p-3 text-center border-r border-border last:border-r-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Year Built
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Clock className="h-4 w-4 text-accent" />
-              <span>{property.buildYear || '2023'}</span>
-            </div>
-          </div>
-
-          <div className="p-3 text-center">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-body block mb-1">
-              Property Type
-            </span>
-            <div className="text-base font-bold text-foreground flex items-center justify-center gap-1">
-              <Building className="h-4 w-4 text-accent" />
-              <span className="capitalize">{property.type || 'Villa'}</span>
-            </div>
-          </div>
-        </div>
+          )
+        })()}
 
         {/* Two-Column Property Details Body */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Details (8 cols) */}
           <div className="lg:col-span-8 space-y-10">
-            {/* Property Verification & Legal Status */}
-            <div className="p-6 rounded-sm bg-card border border-border shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <ShieldCheck className="h-5 w-5 text-accent" />
-                <h2 className="text-lg font-bold text-foreground">
-                  Property Verification &amp; Legal Status
-                </h2>
-              </div>
-              <p className="text-xs text-body leading-relaxed mb-6">
-                Before being listed on Luxus, this property underwent ownership deed verification and quality checks.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-sm border border-border bg-background flex items-center gap-3">
-                  <FileCheck className="h-4 w-4 text-accent flex-shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-foreground">Proof of Ownership</div>
-                    <div className="text-[10px] text-success font-medium">Verified Clean Deed</div>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-sm border border-border bg-background flex items-center gap-3">
-                  <ShieldCheck className="h-4 w-4 text-accent flex-shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-foreground">Identity &amp; Tax Verification</div>
-                    <div className="text-[10px] text-success font-medium">Verified</div>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-sm border border-border bg-background flex items-center gap-3">
-                  <Sparkles className="h-4 w-4 text-accent flex-shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-foreground">Inspection Status</div>
-                    <div className="text-[10px] text-success font-medium">Quality Confirmed</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Architectural Narrative */}
+            {/* Property Overview & Narrative */}
             <div>
               <h2 className="text-xl font-bold text-foreground mb-4">
-                Architectural Narrative
+                About this Property
               </h2>
               <div className="text-sm text-body leading-relaxed space-y-4">
                 <p>
                   {property.description ||
-                    'An extraordinary private residence offering an effortless synthesis of modernist geometry, organic limestone surfaces, and expansive panoramic vistas. Conceived for collectors demanding utmost discretion and bespoke entertaining environments.'}
+                    'Detailed property narrative and architectural documentation available upon inquiry.'}
                 </p>
               </div>
             </div>
 
-            {/* Curated Appointments & Amenities */}
-            <div>
-              <h2 className="text-xl font-bold text-foreground mb-4">
-                Curated Appointments &amp; Features
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {(property.amenities && property.amenities.length > 0
-                  ? property.amenities
-                  : [
-                      'Infinity Edge Lap Pool',
-                      'Temperature Controlled Cellar',
-                      'Private Helipad Access',
-                      'Wellness Spa & Sauna',
-                      'Motor Court for 8 Vehicles',
-                      'Smart Home Crestron Automation',
-                      'Sub-Zero & Gaggenau Suite',
-                      'Dual Gated Perimeter Security',
-                    ]
-                ).map((amenity, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-sm border border-border bg-card text-xs font-medium text-foreground flex items-center gap-2"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                    <span>{amenity}</span>
-                  </div>
-                ))}
+            {/* Curated Appointments & Features */}
+            {property.amenities && property.amenities.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-4">
+                  Features &amp; Amenities
+                </h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {property.amenities.map((amenity, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 rounded-sm border border-border bg-card text-xs font-medium text-foreground flex items-center gap-2"
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      <span>{amenity}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-
+            )}
             {/* Geospatial Map Container */}
             {property.location?.coordinates && (
               <div>
@@ -402,10 +310,10 @@ export default function SinglePropertyPage() {
             {/* Primary Action Card */}
             <div className="p-6 rounded-sm bg-card border border-border shadow-sm">
               <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-1">
-                Executive Console
+                Inquiry & Viewing
               </span>
               <h3 className="text-lg font-bold text-foreground mb-4">
-                Acquisition &amp; Inquiry Options
+                Contact &amp; Schedule
               </h3>
 
               <div className="space-y-3 mb-6">
@@ -423,7 +331,7 @@ export default function SinglePropertyPage() {
                 <button
                   type="button"
                   onClick={() => setContactSellerOpen(true)}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-sm border border-border bg-background text-foreground text-xs font-semibold uppercase tracking-wider hover:bg-muted hover:border-accent/40 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-sm border border-border bg-background text-foreground text-xs font-semibold uppercase tracking-wider hover:bg-muted hover:border-accent/40 transition-colors shadow-sm"
                 >
                   <MessageSquare className="h-4 w-4 text-accent" />
                   <span>Initiate Principal Discussion</span>
@@ -436,7 +344,7 @@ export default function SinglePropertyPage() {
                   className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-sm border border-accent/40 bg-accent/10 text-accent text-xs font-semibold uppercase tracking-wider hover:bg-accent/20 transition-colors"
                 >
                   <BadgeDollarSign className="h-4 w-4 text-accent" />
-                  <span>Submit Formal Escrow Offer</span>
+                  <span>Make an Offer</span>
                 </button>
               </div>
 

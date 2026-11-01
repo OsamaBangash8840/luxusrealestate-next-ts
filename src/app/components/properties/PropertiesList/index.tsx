@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal, LayoutGrid, Map as MapIcon, X } from 'lucide
 import { useGetPropertyQuery } from '@/app/lib/features/properties/propertiesApiSlice'
 import { useGetAllCategoriesQuery } from '@/app/lib/features/categories/categoryApiSlice'
 import { PropertyCard, Container, Typography, PropertyGridSkeleton } from '@/app/components/common'
+import { formatAddress, toArray } from '@/app/base/utils/property'
 import dynamic from 'next/dynamic'
 
 
@@ -28,103 +29,36 @@ export const PropertiesList: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>(initialCategory)
   const [searchTerm, setSearchTerm] = useState<string>(initialLocation)
   const [priceFilter, setPriceFilter] = useState<string>(initialPrice)
-  const [bedsFilter, setBedsFilter] = useState<string>('all')
   const [viewMode, setViewMode] = useState<'grid' | 'split'>('grid')
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | null>(null)
-
-  const defaultEstates = useMemo(() => [
-    {
-      _id: 'est-bel-air',
-      title: 'The Bel-Air Promontory Estate',
-      description: 'Modernist concrete and travertine architectural masterpiece with 180-degree Los Angeles basin to Pacific Ocean vistas.',
-      price: 42500000,
-      type: 'Modernist Villa',
-      category: 'villa',
-      lotSize: '14,200',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/villa-modernist.jpg'],
-      location: { type: 'Point' as const, coordinates: [-118.4468, 34.0837] as [number, number] },
-    },
-    {
-      _id: 'est-central-park',
-      title: 'Central Park Crown Sky Penthouse',
-      description: 'Monumental duplex penthouse with double-height salon overlooking Central Park and Manhattan skyline.',
-      price: 68000000,
-      type: 'Sky Penthouse',
-      category: 'penthouse',
-      lotSize: '11,800',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/sky-penthouse.jpg'],
-      location: { type: 'Point' as const, coordinates: [-73.9772, 40.7654] as [number, number] },
-    },
-    {
-      _id: 'est-cap-d-antibes',
-      title: "Cap d'Antibes Waterfront Sanctuary",
-      description: 'Ultra-rare French Riviera contemporary peninsula estate with private yacht deep-water berth and heated infinity edge pool.',
-      price: 54000000,
-      type: 'Waterfront Haven',
-      category: 'waterfront',
-      lotSize: '16,500',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/waterfront-haven.jpg'],
-      location: { type: 'Point' as const, coordinates: [7.1243, 43.5528] as [number, number] },
-    },
-    {
-      _id: 'est-st-moritz',
-      title: 'St. Moritz Alpine Architectural Icon',
-      description: 'Museum-grade alpine glass and timber compound overlooking the Engadin Valley with subterranean wellness spa and helipad.',
-      price: 38500000,
-      type: 'Alpine Sanctuary',
-      category: 'architectural',
-      lotSize: '13,400',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/alpine-sanctuary.jpg'],
-      location: { type: 'Point' as const, coordinates: [9.8355, 46.4908] as [number, number] },
-    },
-  ], [])
 
   // Dynamic Categories from Backend
   const categories = useMemo(() => {
     const base = [{ id: 'all', label: 'All Estates', matchValue: 'all' }]
-    const categoryList: any[] = Array.isArray(dbCategories)
-      ? dbCategories
-      : Array.isArray((dbCategories as any)?.data)
-      ? (dbCategories as any).data
-      : []
+    const categoryList = toArray(dbCategories)
 
-    if (categoryList && categoryList.length > 0) {
-      const mapped = categoryList.map((c) => ({
+    if (categoryList.length > 0) {
+      const mapped = categoryList.map((c: any) => ({
         id: c._id || c.name.toLowerCase(),
-        label: c.name,
+        label: c.name.charAt(0).toUpperCase() + c.name.slice(1),
         matchValue: c.name.toLowerCase(),
       }))
       return [...base, ...mapped]
     }
     return [
       ...base,
-      { id: 'villa', label: 'Modernist Villas', matchValue: 'villa' },
-      { id: 'penthouse', label: 'Sky Penthouses', matchValue: 'penthouse' },
-      { id: 'waterfront', label: 'Waterfront', matchValue: 'waterfront' },
-      { id: 'architectural', label: 'Architectural', matchValue: 'architectural' },
+      { id: 'villa', label: 'Villas', matchValue: 'villa' },
+      { id: 'apartment', label: 'Apartments', matchValue: 'apartment' },
+      { id: 'house', label: 'Houses', matchValue: 'house' },
+      { id: 'condo', label: 'Condos', matchValue: 'condo' },
     ]
   }, [dbCategories])
 
   // Filter properties
   const filteredProperties = useMemo(() => {
-    const propertyList: any[] = Array.isArray(rawProperties)
-      ? rawProperties
-      : Array.isArray((rawProperties as any)?.data)
-      ? (rawProperties as any).data
-      : Array.isArray((rawProperties as any)?.properties)
-      ? (rawProperties as any).properties
-      : []
+    const listToFilter = toArray(rawProperties)
 
-    const listToFilter = (propertyList && propertyList.length > 0) ? propertyList : defaultEstates
-    return listToFilter.filter((p) => {
+    return listToFilter.filter((p: any) => {
       // Status filter: approved only
       if (p.status && p.status !== 'approved') return false
 
@@ -140,12 +74,13 @@ export const PropertiesList: React.FC = () => {
         if (!matchesName && !matchesId) return false
       }
 
-      // Keyword / Location search
+      // Keyword / Location search across title, description, and physical address
       if (searchTerm.trim()) {
         const term = searchTerm.toLowerCase()
         const matchesTitle = p.title?.toLowerCase().includes(term)
         const matchesDesc = p.description?.toLowerCase().includes(term)
-        if (!matchesTitle && !matchesDesc) return false
+        const matchesAddr = formatAddress(p.address).toLowerCase().includes(term)
+        if (!matchesTitle && !matchesDesc && !matchesAddr) return false
       }
 
       // Price Filter
@@ -158,7 +93,7 @@ export const PropertiesList: React.FC = () => {
 
       return true
     })
-  }, [rawProperties, activeCategory, searchTerm, priceFilter, categories, defaultEstates])
+  }, [rawProperties, activeCategory, searchTerm, priceFilter, categories])
 
   // Center coordinates for map
   const activeProperty = useMemo(() => {
@@ -281,17 +216,7 @@ export const PropertiesList: React.FC = () => {
               <option value="30m+">$30M+ USD</option>
             </select>
 
-            {/* Bedrooms Dropdown */}
-            <select
-              value={bedsFilter}
-              onChange={(e) => setBedsFilter(e.target.value)}
-              className="rounded-sm border border-input bg-background px-3 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-accent"
-            >
-              <option value="all">Any Beds</option>
-              <option value="3">3+ Bedrooms</option>
-              <option value="5">5+ Bedrooms</option>
-              <option value="7">7+ Bedrooms</option>
-            </select>
+            
           </div>
         </div>
 

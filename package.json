@@ -9,7 +9,8 @@
         "lint": "npm run lint:design && eslint --ext .js,.jsx,.ts,.tsx src --color",
         "format": "prettier --write 'src/**/*.{ts,tsx,scss,css,json}'",
         "isready": "npm run format && npm run lint && npm run build",
-        "lint:design": "node scripts/check-hardcoded-colors.mjs"
+        "lint:design": "node scripts/check-hardcoded-colors.mjs",
+        "postinstall": "node scripts/patch-next-notfound.cjs"
     },
     "dependencies": {
         "@googlemaps/react-wrapper": "^1.1.42",

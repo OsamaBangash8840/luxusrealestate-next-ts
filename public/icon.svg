@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Architectural Dark Obsidian Canvas -->
+  <rect width="64" height="64" rx="12" fill="#0C0C0B" stroke="#292826" stroke-width="2"/>
+  
+  <!-- Subtle Internal Hairline Gold Frame -->
+  <rect x="6" y="6" width="52" height="52" rx="8" fill="none" stroke="#D4AF37" stroke-width="0.75" stroke-opacity="0.35"/>
+  
+  <!-- Geometric LUXUS Monogram 'L' in Champagne Bronze -->
+  <path d="M22 17 V45 H44 V39 H28 V17 Z" fill="#D4AF37"/>
+  
+  <!-- Architectural Apex Accent Diamond -->
+  <polygon points="42,19 44.5,22 47,19 44.5,16" fill="#F5F4EE"/>
+</svg>

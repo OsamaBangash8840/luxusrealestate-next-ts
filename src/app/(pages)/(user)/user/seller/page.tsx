@@ -94,6 +94,12 @@ export default function SellerDashboardPage() {
           >
             Tours ({stats?.toursBooked ?? 0})
           </Link>
+          <Link
+            href="/chat"
+            className="px-4 py-1.5 rounded-sm text-body hover:text-foreground font-semibold text-xs transition-all"
+          >
+            Messages &amp; Offers
+          </Link>
         </div>
 
         {/* Action Required Warning Banner (If rejected properties exist) */}

@@ -25,46 +25,7 @@ export const ThirdSection: React.FC = () => {
     .filter((p) => p.status === 'approved' || !p.status)
     .slice(0, 3)
 
-  const defaultFeatured = [
-    {
-      _id: 'flagship-1',
-      title: 'The Bel-Air Promontory Estate',
-      price: 42500000,
-      type: 'Modernist Villa',
-      category: 'Villa',
-      lotSize: '14,200',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/villa-modernist.jpg'],
-      location: { type: 'Point' as const, coordinates: [-118.4468, 34.0837] as [number, number] },
-    },
-    {
-      _id: 'flagship-2',
-      title: 'Central Park Crown Sky Penthouse',
-      price: 68000000,
-      type: 'Sky Penthouse',
-      category: 'Penthouse',
-      lotSize: '11,800',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/sky-penthouse.jpg'],
-      location: { type: 'Point' as const, coordinates: [-73.9772, 40.7654] as [number, number] },
-    },
-    {
-      _id: 'flagship-3',
-      title: "Cap d'Antibes Waterfront Villa",
-      price: 54000000,
-      type: 'Waterfront Haven',
-      category: 'Waterfront',
-      lotSize: '16,500',
-      status: 'approved' as const,
-      propertyStatus: 'Live & Approved',
-      images: ['/images/waterfront-haven.jpg'],
-      location: { type: 'Point' as const, coordinates: [7.1243, 43.5528] as [number, number] },
-    },
-  ]
-
-  const featuredProperties = rawFeatured && rawFeatured.length > 0 ? rawFeatured : defaultFeatured
+  const featuredProperties = rawFeatured
 
   return (
     <section className="py-20 bg-background border-t border-border">

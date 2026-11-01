@@ -4,8 +4,8 @@ import localFont from 'next/font/local'
 import { usePathname } from 'next/navigation'
 import { ToastContainer } from 'react-toastify'
 
-import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
+import './globals.css'
 import { StoreProvider } from './StoreProvider'
 import { ThemeProvider } from './providers/ThemeProvider'
 import { Navbar, Footer } from './components/layout/website'
@@ -32,6 +32,11 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icon.svg" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-body flex flex-col min-h-screen bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"

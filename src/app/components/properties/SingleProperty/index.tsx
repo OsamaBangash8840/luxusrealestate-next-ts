@@ -70,11 +70,13 @@ export const SingleProperty = ({
 
     if (property?.location?.coordinates) {
       const reverseGeocode = async (lat: number, lng: number) => {
-        const url = `http://api.positionstack.com/v1/reverse?access_key=${API_KEY}&query=${lat},${lng}&output=json`
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
 
         try {
           const response = await axios.get(url)
-          if (response.data?.data?.[0]) {
+          if (response.data?.display_name) {
+            setAddress(response.data.display_name.split(",").slice(0, 3).join(","))
+          } else if (response.data?.data?.[0]) {
             setAddress(response.data.data[0].label)
           } else {
             setAddress('No address found')

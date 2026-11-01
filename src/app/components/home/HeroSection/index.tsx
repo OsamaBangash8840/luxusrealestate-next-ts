@@ -102,10 +102,10 @@ export const HeroSection = () => {
                   className="w-full rounded-md border border-input bg-background/90 p-3 text-sm text-foreground focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent transition-all"
                 >
                   <option value="">All Categories</option>
-                  <option value="villa">Modernist Villa</option>
-                  <option value="penthouse">Sky Penthouse</option>
-                  <option value="waterfront">Waterfront Estate</option>
-                  <option value="architectural">Architectural Icon</option>
+                  <option value="villa">Villas</option>
+                  <option value="apartment">Apartments &amp; Penthouses</option>
+                  <option value="house">Houses</option>
+                  <option value="condo">Condominiums</option>
                 </select>
               </div>
 
@@ -116,7 +116,7 @@ export const HeroSection = () => {
                   variant="extraSmallBold"
                   className="mb-2 block uppercase tracking-wider text-accent font-mono text-xs font-bold"
                 >
-                  Acquisition Band
+                  Price Range
                 </Typography>
                 <select
                   value={priceRange}
@@ -138,7 +138,7 @@ export const HeroSection = () => {
                 >
                   <Search className="h-4 w-4" />
                   <Typography as="span" variant="smallBold" className="text-accent-foreground">
-                    Explore Portfolio
+                    Search Properties
                   </Typography>
                 </button>
               </div>
@@ -152,36 +152,43 @@ export const HeroSection = () => {
               variant="extraSmallBold"
               className="text-foreground text-[11px] uppercase tracking-wider font-mono font-semibold"
             >
-              Curated Highlights:
+              Prime Locations:
             </Typography>
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => router.push('/properties?category=villa')}
+                onClick={() => router.push('/properties?location=Beverly%20Hills')}
                 className="px-2.5 py-1 rounded-full bg-muted/60 hover:bg-muted text-foreground transition-colors text-[11px]"
               >
-                Bel-Air Villas
+                Beverly Hills
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/properties?category=penthouse')}
+                onClick={() => router.push('/properties?location=New%20York')}
                 className="px-2.5 py-1 rounded-full bg-muted/60 hover:bg-muted text-foreground transition-colors text-[11px]"
               >
-                Manhattan Penthouses
+                New York
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/properties?category=waterfront')}
+                onClick={() => router.push('/properties?location=Geneva')}
                 className="px-2.5 py-1 rounded-full bg-muted/60 hover:bg-muted text-foreground transition-colors text-[11px]"
               >
-                Cap d&apos;Antibes Waterfront
+                Geneva
               </button>
               <button
                 type="button"
-                onClick={() => router.push('/properties?category=architectural')}
+                onClick={() => router.push('/properties?location=London')}
                 className="px-2.5 py-1 rounded-full bg-muted/60 hover:bg-muted text-foreground transition-colors text-[11px]"
               >
-                St. Moritz Compounds
+                London
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/properties?location=Dubai')}
+                className="px-2.5 py-1 rounded-full bg-muted/60 hover:bg-muted text-foreground transition-colors text-[11px]"
+              >
+                Dubai
               </button>
             </div>
           </div>
